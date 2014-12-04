@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2002/12/cal#">
+<Vcalendar>
+<prodid>-//ORACLE//NONSGML CSDK10.1.2.2.0 - AtomCal 1.0//EN</prodid>
+<version>2.0</version>
+<component>
+<Vevent rdf:about="#I1+33882054+100+1+508699555">
+<uid>I1+33882054+100+1+508699555</uid>
+<dtstart>20070503</dtstart>
+<dtend>20070504</dtend>
+<organizer rdf:parseType="Resource">
+<calAddress rdf:resource="mailto:hleong@uoguelph.ca"/>
+<cn>Athletics Events</cn>
+</organizer>
+<transp>TRANSPARENT</transp>
+<summary>Football Banquet</summary>
+<status>CONFIRMED</status>
+<sequence rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</sequence>
+<priority rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</priority>
+<class>PUBLIC</class>
+</Vevent>
+</component>
+<component>
+<Vevent rdf:about="#I1+17427379+100+2+504027501">
+<uid>I1+17427379+100+2+504027501</uid>
+<dtstart>20070501T150000Z</dtstart>
+<dtend>20070501T200000Z</dtend>
+<organizer rdf:parseType="Resource">
+<calAddress rdf:resource="mailto:hleong@uoguelph.ca"/>
+<cn>Athletics Events</cn>
+</organizer>
+<transp>OPAQUE</transp>
+<summary>Athletics Job Fair</summary>
+<status>CONFIRMED</status>
+<sequence rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</sequence>
+<priority rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</priority>
+<class>PUBLIC</class>
+</Vevent>
+</component>
+<component>
+<Vevent rdf:about="#I1+653523+100+1+507482246">
+<uid>I1+653523+100+1+507482246</uid>
+<dtstart>20070505</dtstart>
+<dtend>20070506</dtend>
+<organizer rdf:parseType="Resource">
+<calAddress rdf:resource="mailto:hleong@uoguelph.ca"/>
+<cn>Athletics Events</cn>
+</organizer>
+<transp>TRANSPARENT</transp>
+<summary>2007 Athletic Banquet</summary>
+<status>CONFIRMED</status>
+<sequence rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</sequence>
+<priority rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</priority>
+<class>PUBLIC</class>
+</Vevent>
+</component>
+<component>
+<Vevent rdf:about="#I1+368616+100+1+493651433">
+<uid>I1+368616+100+1+493651433</uid>
+<dtstart>20070512</dtstart>
+<dtend>20070517</dtend>
+<organizer rdf:parseType="Resource">
+<calAddress rdf:resource="mailto:hleong@uoguelph.ca"/>
+<cn>Athletics Events</cn>
+</organizer>
+<transp>TRANSPARENT</transp>
+<summary>March Break Camp</summary>
+<status>CONFIRMED</status>
+<sequence rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</sequence>
+<priority rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</priority>
+<class>PUBLIC</class>
+</Vevent>
+</component>
+<component>
+<Vevent rdf:about="#I1+275398+100+1+510425055">
+<uid>I1+275398+100+1+510425055</uid>
+<dtstart>20070506</dtstart>
+<dtend>20070509</dtend>
+<organizer rdf:parseType="Resource">
+<calAddress rdf:resource="mailto:hleong@uoguelph.ca"/>
+<cn>Athletics Events</cn>
+</organizer>
+<transp>TRANSPARENT</transp>
+<summary>College Royal Weekend</summary>
+<status>CONFIRMED</status>
+<sequence rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</sequence>
+<priority rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</priority>
+<class>PUBLIC</class>
+</Vevent>
+</component>
+<component>
+<Vevent rdf:about="#I1+152105+100+1+493475893">
+<uid>I1+152105+100+1+493475893</uid>
+<dtstart>20070515</dtstart>
+<dtend>20070517</dtend>
+<organizer rdf:parseType="Resource">
+<calAddress rdf:resource="mailto:hleong@uoguelph.ca"/>
+<cn>Athletics Events</cn>
+</organizer>
+<transp>TRANSPARENT</transp>
+<summary>Campus Days</summary>
+<status>CONFIRMED</status>
+<sequence rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</sequence>
+<priority rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</priority>
+<class>PUBLIC</class>
+</Vevent>
+</component>
+</Vcalendar>
+</rdf:RDF>

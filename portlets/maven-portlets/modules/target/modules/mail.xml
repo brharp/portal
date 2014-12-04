@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <title>Mail</title>
+  <pref><name>name</name><type>text</type><default></default></pref>
+  <pref><name>host</name><type>text</type><default></default></pref>
+  <pref>
+    <name>proto</name><type>select</type>
+    <option>imap</option><option>pop3</option>
+    <default>imap</default>
+  </pref>
+  <pref><name>user</name><type>text</type><default></default></pref>
+  <pref><name>pass</name><type>password</type><default></default></pref>
+  <pref><name>webmail</name><type>text</type><default></default></pref>
+  <cached>true</cached>
+  <content>
+    <![CDATA[
+
+    <script type="text/javascript">
+        function %MODULE_ID%_showMail(feedDom) {
+          var html = "";
+          var items = feedDom.getElementsByTagName("item");
+          if (items.length > 0) {
+            html += '<p>' + items.length + ' new message(s)</p>';
+            html += "<ul>";
+            for (var i = 0; i < items.length; i++) {
+              var item = items[i];
+              var title = item.getElementsByTagName("title")[0];
+              var from = item.getElementsByTagName("creator")[0];
+              html += "<li style='list-style-image:url(%MODULE_CONTEXT%images/mail.gif)'>";
+              if (from) { 
+                html += "<span title='From: ";
+                html += (from.firstChild.text || from.firstChild.textContent).escapeHTML();
+                html += "'>";
+              }
+              if (title) {
+                html += (title.firstChild.text || title.firstChild.textContent).escapeHTML();
+              } else {
+                html += "no subject";
+              }
+              if (from) { 
+                html += "</span>";
+              }
+              html += "</li>";
+            }
+            html += "</ul>";
+          } else {
+            html += '<p>No new messages.</p>';
+          }
+          var feed = document.getElementById('%MODULE_ID%.mail');
+          feed.innerHTML = html;
+        }
+
+        function %MODULE_ID%_onload() {
+          %MODULE_TITLE%.firstChild.data="%MODULE_PREF_VALUE_name% Mail";
+          loadMail("%MODULE_PREF_VALUE_host%","%MODULE_PREF_VALUE_proto%",
+                   "%MODULE_PREF_VALUE_user%","%MODULE_PREF_VALUE_pass%",
+                   %MODULE_ID%_showMail);
+        }
+
+        function %MODULE_ID%_refresh() {
+          document.getElementById('%MODULE_ID%.mail')
+            .innerHTML = '<img src="%MODULE_CONTEXT%images/loading.gif"/><em>Loading...</em>';
+          %MODULE_ID%_onload();
+        }
+    </script>
+
+    <div id="%MODULE_ID%.mail">
+      <img src="%MODULE_CONTEXT%images/loading.gif"/>
+      <em>Loading...</em>
+    </div>
+
+    <p>
+    <a href='%MODULE_PREF_VALUE_webmail%' target='_blank'>open webmail</a>
+    -
+    <a href='javascript:%MODULE_ID%_refresh()'>refresh</a>
+    </p>
+    
+    ]]>
+  </content>
+</module>
+
+

@@ -1,0 +1,106 @@
+<!--
+
+    Maven Build for Portlets
+    
+    This is a generic ant build file for building portlets organized 
+    according to maven conventions. The build file uses maven's
+    dependency resolution features (along with the project pom.xml) to
+    resolve dependencies. Required jars are copied out of the local
+    repository into WEB-INF/lib.
+
+    The ``deploy'' target is intended to be called from the portal's
+    master build file. It uses the uPortal Deployer tool to install
+    the web application in ``webapps'' and rewrite web.xml with the
+    required uPortal servlet mappings. The deploy target requires
+    ``catalina.home'' and ``uportal.source.directory'' to be set in
+    your build properties. The ``catalina.home'' property should be
+    set to the root of your Tomcat installation running uPortal. It
+    is required to satisfy dependencies of the Deployer tool. The
+    ``uportal.source.directory'' must be set so the deployer can
+    locate ``portal.tld''.
+
+    This build file requires the Antlib for Maven 2.0.
+
+-->
+<project name="maven-portlet" default="package" basedir="."
+         xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <property file="${basedir}/build.properties" />
+  <property file="${user.home}/build.properties" />
+  <property file="${user.home}/.m2/maven.properties"/>
+  <property name="build.home" value="${basedir}/target/classes"/>
+  <property name="maven.build.output" value="${build.home}"/>
+  <property name="maven.build.directory" value="${basedir}/target"/>
+  <property name="maven.build.final.name" value="${ant.project.name}"/>
+  <property name="maven.test.reports" value="${maven.build.directory}/test-reports"/>
+  <property name="maven.test.output" value="${basedir}/target/test-classes"/>
+  <property name="maven.repo.local" value="${user.home}/.m2/repository"/>
+  <property name="deploy.home" value="${catalina.home}/webapps"/>
+
+  <artifact:pom id="maven.project" file="pom.xml"/>
+
+  <target name="clean" description="Clean the output directory">
+    <delete dir="${maven.build.directory}"/>
+  </target>
+
+  <target name="compile" depends="get-deps" description="Compile the code">
+    <mkdir dir="${maven.build.output}"/>
+    <javac destdir="${maven.build.output}/WEB-INF/classes" excludes="**/package.html" debug="true" 
+           deprecation="true" optimize="false">
+      <src>
+        <pathelement location="${basedir}/src/main/java"/>
+      </src>
+      <classpath refid="build.classpath"/>
+    </javac>
+    <copy todir="${maven.build.output}/WEB-INF/lib" flatten="true">
+      <fileset refid="dependencies.fileset"/>
+    </copy>
+    <copy todir="${maven.build.directory}">
+      <fileset dir="${basedir}/src/main/webapp"/>
+    </copy>
+  </target>
+
+  <target name="assemble" depends="compile">
+    <mkdir dir="${maven.build.directory}/${ant.project.name}"/>
+    <copy todir="${maven.build.directory}/${ant.project.name}/WEB-INF/classes">
+      <fileset dir="${maven.build.output}"/>
+    </copy>
+    <copy todir="${maven.build.directory}/${ant.project.name}/WEB-INF/lib" flatten="true">
+      <fileset refid="dependencies.fileset"/>
+    </copy>
+    <copy todir="${maven.build.directory}/${ant.project.name}">
+      <fileset dir="${basedir}/src/main/webapp"/>
+    </copy>
+  </target>
+
+  <target name="package" depends="assemble" description="Build the WAR">
+    <jar jarfile="${maven.build.directory}/${maven.build.final.name}.war" 
+         basedir="${maven.build.directory}/${ant.project.name}" 
+         excludes="**/package.html"/>
+  </target>
+
+  <target name="get-deps" depends="" description="Download all dependencies" 
+          unless="maven.mode.offline">
+    <artifact:dependencies pathId="build.classpath" filesetId="dependencies.fileset">
+      <artifact:pom refid="maven.project"/>
+    </artifact:dependencies>
+  </target>
+
+  <target name="deploy" depends="package" description="uPortal Deployment">
+    <java fork="true" failonerror="true"
+          classname="org.jasig.portal.container.deploy.Deployer"
+          dir="${uportal.source.directory}">
+      <classpath>
+        <fileset dir="${catalina.home}/shared/lib">
+          <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${catalina.home}/common/lib">
+          <include name="**/*.jar"/>
+        </fileset>
+        <pathelement location="${uportal.source.directory}/build/WEB-INF/classes"/>
+      </classpath>
+      <arg value="${deploy.home}" />
+      <arg value="${maven.build.directory}/${ant.project.name}.war"/>
+    </java>
+  </target>
+</project>

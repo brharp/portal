@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="module.xsl"?>
+<module>
+  <title>MyInbox</title>
+  <author>MyPortico</author>
+  <description>
+    Preview your email inbox.
+  </description>
+  <!--cached>true</cached-->
+  <help><![CDATA[
+    Click "open webmail" to view your messages.
+  ]]></help>
+  <pref>
+    <name>show</name>
+    <type>select</type>
+    <option value="-1">1 message</option>
+    <option value="-2">2 messages</option>
+    <option value="-3">3 messages</option>
+    <option value="-4">4 messages</option>
+    <option value="-5">5 messages</option>
+    <option value="-6">6 messages</option>
+    <option value="-7">7 messages</option>
+    <option value="-8">8 messages</option>
+    <option value="-9">9 messages</option>
+    <default>-5</default>
+  </pref>
+  <content>
+    <![CDATA[
+
+    <div id="%MODULE_ID%_mail"></div>
+
+    <div class="myinbox-checkmail">
+      <a href="javascript:%MODULE_ID%_refresh()">Refresh MyInbox Now</a>
+    </div>
+
+    <script type="text/javascript">
+
+        function %MODULE_ID%_update(r) {
+          if (r.readyState == 4) {
+            if (r.status == 200) {
+              RDF.db = []; // HACK
+              RDF.parseXML(r.responseXML);
+              %MODULE_ID%_display();
+            } else {
+              %MODULE_ID%_showError();
+            }
+          }
+        }
+
+        function %MODULE_ID%_showError() {
+          Element.update('%MODULE_ID%_mail',
+            "<p>Oops... we've encountered a problem and we're " +
+            "unable to get to your Inbox!</p><p>You may want to " +
+            "<a href='javascript:%MODULE_ID%_refresh()'>" +
+            "Refresh MyInbox</a> now.</p><p>If the " +
+            "problem persists, please <a href='/portal/Feedback'>" +
+            "Send us Feedback</a>.</p>"
+          );
+        }
+
+        function %MODULE_ID%_fmtDate(d) {
+          var now = new Date();
+          var date = d.getDate();
+          var month = d.getMonth();
+          var year = d.getFullYear();
+          if (date == now.getDate() && 
+              month == now.getMonth() &&
+              year == now.getFullYear()) {
+            var hours = d.getHours();
+            var minutes = d.getMinutes();
+            var am = true;
+            // Hour:Minute format.
+            if (hours > 11) { am = false; }
+            if (hours > 12) { hours -= 12; }
+            return (hours < 10 ? '0' : '') + hours + ':' +
+                   (minutes < 10 ? '0' : '') + minutes + ' ' +
+                   (am ? 'am' : 'pm');
+          }
+          else if (year == now.getFullYear()) {
+            return date + ' ' + ["Jan", "Feb", "Mar", "Apr", "May",
+             "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][month];
+          }
+          else {
+            return month + '/' + date + '/' + year;
+          }
+        }
+
+
+        function %MODULE_ID%_display() {
+          Element.update('%MODULE_ID%_mail', '');
+
+          var s = new Array();
+          s.appendChild = function(node) {
+            this.peek().appendChild(node);
+          }
+          s.peek = function() {
+            return this[this.length-1];
+          }
+
+          s.push($('%MODULE_ID%_mail'));
+
+          var results = RDF.select(
+            ['?unseen'],
+            [{s: '?mbox', p: 'rdf:type', o: 'Mailbox'},
+             {s: '?mbox', p: 'unseen',   o: '?unseen'}
+            ]);
+            
+          if (results.length > 0) {
+            // Introduction div
+            s.push(document.createElement('p'));
+            s.peek().className = 'portlet-introduction';
+            s.push(document.createElement('strong'));
+            s.appendChild(document.createTextNode('Unread ('));
+            s.appendChild(document.createTextNode(results[0].unseen));
+            s.appendChild(document.createTextNode(')'));
+            s.appendChild(s.pop()); // strong
+            s.appendChild(document.createTextNode(' - Open '));
+            s.push(document.createElement('a'));
+            s.peek().setAttribute('href', '/portal/WEBmail');
+            s.peek().setAttribute('target', '_blank');
+            s.appendChild(document.createTextNode('WebMail'));
+            s.appendChild(s.pop()); // a
+            s.appendChild(s.pop()); // p
+          }
+
+          results = RDF.select(
+            ['?subject', '?from', '?date', '?flags'],
+            [{s: '?msg', p: 'rdf:type', o: 'Message'},
+             {s: '?msg', p: 'envelope', o: '?env'},
+             {s: '?env', p: 'subject',  o: '?subject'},
+             {s: '?env', p: 'from',     o: '?from'},
+             {s: '?env', p: 'date',     o: '?date'},
+             {s: '?msg', p: 'flags',    o: '?flags', optional: true}
+            ]);
+            
+          if (results.length == 0) {
+            s.push(document.createElement('div'));
+            s.peek().className = 'myinbox-empty';
+            s.push(document.createTextNode(
+              'You currently have no messages.'
+            ));
+            s.appendChild(s.pop()); // 'no message' text
+            s.appendChild(s.pop()); // div
+          } else for (var i = results.length-1; i >= 0; i--) {
+            // Right div
+            s.push(document.createElement('div'));
+            s.peek().className = 'myinbox-right';
+            var date = new Date(Date.parse(results[i].date));
+            s.push(document.createTextNode(
+              %MODULE_ID%_fmtDate(date)
+            ));
+            s.appendChild(s.pop());
+            s.appendChild(s.pop());
+            // Left div
+            s.push(document.createElement('div'));
+            if ((results[i].flags||'').match(/\\Deleted/)) {
+              s.peek().className = 'myinbox-left deleted';
+              s.push(document.createElement('img'));
+              s.peek().setAttribute('src', '%MODULE_CONTEXT%images/del.gif');
+              s.peek().setAttribute('alt', 'deleted message');
+              s.appendChild(s.pop()); // img
+            } else if ((results[i].flags||'').match(/\\Seen/)) {
+              s.peek().className = 'myinbox-left read';
+              s.push(document.createElement('img'));
+              s.peek().setAttribute('src', '%MODULE_CONTEXT%images/read.gif');
+              s.peek().setAttribute('alt', 'read message');
+              s.appendChild(s.pop()); // img
+            } else {
+              s.peek().className = 'myinbox-left unread';
+              s.push(document.createElement('img'));
+              s.peek().setAttribute('src','%MODULE_CONTEXT%images/unread.gif');
+              s.peek().setAttribute('alt','unread message');
+              s.appendChild(s.pop()); // img
+            }
+            s.push(document.createElement('span'));
+            s.push(document.createTextNode(results[i].from.match(/\w+/)));
+            s.appendChild(s.pop()); // from text
+            s.appendChild(s.pop()); // span
+            s.push(document.createTextNode(' - '));
+            s.appendChild(s.pop()); // hyphen text
+            s.push(document.createTextNode(results[i].subject));
+            s.appendChild(s.pop()); // subject text
+            s.appendChild(s.pop()); // div
+          }
+        }
+
+        function %MODULE_ID%_onload() {
+          %MODULE_ID%_refresh();
+        }
+
+        function %MODULE_ID%_status() {
+          Element.update('%MODULE_ID%_mail',
+          '<img src="%MODULE_CONTEXT%images/loading.gif"/><em>Loading...</em>');
+        }
+
+        function %MODULE_ID%_refresh() {
+          %MODULE_ID%_status();
+
+          var query = $H({
+            start: '%MODULE_PREF_VALUE_show%',
+              end: '-1'
+          }).toQueryString();
+
+          var r = Ajax.getTransport();
+          r.onreadystatechange = function(){%MODULE_ID%_update(r)};
+          r.open('POST', '/portal/mailProxy', true);
+          r.setRequestHeader("Content-type",
+            "application/x-www-form-urlencoded");
+          r.send(query);
+        }
+
+        %MODULE_ID%_status();
+    </script>
+    
+    ]]>
+  </content>
+</module>
+
+

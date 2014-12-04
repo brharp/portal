@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" 
+    version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+    <portlet>
+        <description>Includes a Servlet</description>
+        <portlet-name>NotificationPortlet</portlet-name>
+        <display-name>Hello Portlet</display-name>
+        <portlet-class>ca.uoguelph.ccs.portal.portlets.notification.bus.NotificationPortlet</portlet-class>
+        <expiration-cache>-1</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+        </supports>
+        <portlet-info>
+            <title>Hello Portlet</title>
+            <short-title>Hello</short-title>
+            <keywords>Hello, Portlet</keywords>
+        </portlet-info>
+		<user-attribute>
+		    <description>uid</description>
+		    <name>user.login.id</name>
+		</user-attribute>
+        <user-attribute>
+            <description>uid</description>
+            <name>user.login.password</name>
+        </user-attribute>
+        <user-attribute>
+            <description>password</description>
+            <name>password</name>
+        </user-attribute>
+		<user-attribute>        
+			<description>organizationalstatus</description>
+			<name>uPortalTemplateUserName</name>
+		</user-attribute>
+    </portlet>
+ </portlet-app>

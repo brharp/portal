@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <title>MiniBrowser</title>
+  <pref><name>address</name><type>url</type><default>http://www.bourque.org</default></pref>
+  <pref><name>height</name><type>number</type><default>400px</default></pref>
+  <content>
+    <![CDATA[
+      <iframe src="%MODULE_PREF_VALUE_address%" width="100%" 
+              height="%MODULE_PREF_VALUE_height%" frameborder="0" >
+      </iframe>
+    ]]>
+  </content>
+</module>

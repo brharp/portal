@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="module.xsl"?>
+<module>
+  <title>iCal</title>
+  <author>MyPortico</author>
+  <description>
+    Preview an iCalendar calendar.
+  </description>
+  <pref>
+    <name>source</name>
+    <type>string</type>
+    <default></default>
+  </pref>
+  <content>
+    <![CDATA[
+
+    <script type='text/javascript' src='/modules/lib/prototype.js'></script>
+
+    <div id='%MODULE_ID%_cal'/>
+
+    <script>
+
+      function %MODULE_ID%_onload() {
+        if ("%MODULE_PREF_VALUE_source%" != "") {
+          new Ajax.Updater("%MODULE_ID%_cal", "%MODULE_PREF_VALUE_source%");
+        }
+      }
+
+    </script>
+
+    ]]>
+  </content>
+</module>

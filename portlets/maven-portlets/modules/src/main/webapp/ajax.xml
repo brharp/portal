@@ -1,0 +1,14 @@
+<module>
+  <content>
+    <![CDATA[
+    <script>
+      function %MODULE_ID%_onload() {
+        new WebProxy.Updater('%MODULE_ID%.content', 
+          '%MODULE_CONTEXT%/hello.html');
+      }
+    </script>
+    <div id='%MODULE_ID%.content'/>
+    ]]>
+  </content>
+</module>
+

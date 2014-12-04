@@ -1,0 +1,9 @@
+<module>
+  <title>ModeTest</title>
+  <content>
+    <![CDATA[
+    The mode is: %MODULE_MODE%.<br/>
+    The state is: %MODULE_STATE%.<br/>
+    ]]>
+  </content>
+</module>

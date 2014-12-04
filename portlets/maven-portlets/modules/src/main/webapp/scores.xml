@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <title>News</title>
+  <pref><name>feed</name><type>string</type><default></default></pref>
+  <content>
+    <![CDATA[
+<SCRIPT>
+<!--
+var http=false;
+var elementContainer;
+
+function createRequestObject() {
+	var ro;
+
+	// First, try to create an XMLHttpRequest object for most modern browsers.
+	try { ro = new XMLHttpRequest(); }
+	catch (error) {
+		/* If the default method didn't work, try to create the object for Microsoft IE 5/6 using an ActiveX Object. */
+		try { ro = new ActiveXObject("Microsoft.XMLHTTP"); }
+		catch (error) { return false; }
+	}
+	return ro;
+}
+
+// retrieve a page using the XMLHttpRequest object.
+function http_getPage(url,qs,post,callFunc) {
+/* @param url			- URL to retrieve
+	@param qs			- query string portion (GET or POST)
+	@param post			- if 1, POST operation used (response is returned)
+	@param callFunc	- function to call when done (if GET used)
+*/
+	if (!http) http=createRequestObject();
+	if (http) {
+		if (post) {
+		// POST operation...
+			http.open("POST",url,false);
+			http.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+			http.send(qs);
+			return http.responseText;
+		}
+		else {
+		// GET operation...
+			http.open("GET",url+((qs.length>0)?("?"+qs):""));
+			http.send(null);
+			http.onreadystatechange=callFunc;			
+		}
+	}
+}
+
+	var scores_curPage=1;
+	var scores_timer=null;
+	
+	function update_Scores(page) {
+	// replaces content on page with new.
+		div=getElement("scores");
+		if (div) {
+			newHTML=http_getPage("http://www.athletics.uoguelph.ca/includes/components/cmp-scores-frame.asp","home_id=0&p="+page,1,"")
+			idx=newHTML.indexOf('<div id="content">');
+			edx=newHTML.lastIndexOf('</div>');
+			if ((idx>0)&&(edx>0)) {
+				newHTML=newHTML.substr(idx+18,edx-idx-18);
+				div.innerHTML=newHTML;
+				scores_curPage=page;
+			}
+		}
+	}
+	function update_Scores_pause() {
+	// kills the auto-cycling of the items...
+		if (scores_timer) {
+			clearTimeout(scores_timer);
+			scores_timer=0;
+		}
+	}
+	function update_Scores_goto(page) {
+		update_Scores_pause();
+		update_Scores(page);
+	}
+	function update_Scores_autoCycle() {
+	// moves to the next item...
+	
+		update_Scores(parseInt(scores_curPage)+1);
+		scores_timer=setTimeout("update_Scores_autoCycle()",4000);
+	}
+	
+	scores_timer=setTimeout("update_Scores_autoCycle()",4000);
+	
+//-->
+</SCRIPT>
+<div id="scores">
+
+	<h3>Scores</h3>
+
+	<div class="scoretxt"><strong>Volleyball - Women</strong><br />
+		Nov 29, 2006<br />
+		GRYPHONS&nbsp;3 - Brock&nbsp;2<br />
+		at Brock
+	</div>
+
+	<div class="scorenav">
+
+		<p class="more">more</p>
+		<div class="scoresbuttons">
+			<a class="scoreprev" href="javascript:void(update_Scores_goto(10))"><img src="images/blank.gif" width="13" height="13" alt="Previous" title="Previous"  /></a><a class="scorepause" href="javascript:void(update_Scores_pause())"><img src="images/blank.gif" width="13" height="13" alt="Pause" title="Pause" /></a><a class="scorenext" href="javascript:void(update_Scores_goto(2))"><img src="images/blank.gif" width="13" height="13" alt="Next" title="Next" /></a>
+		</div>
+		
+		<a href="/Varsity_Sport/_Teams/Volleyball_-_Women/Schedule" class="viewall">view all</a>
+
+	</div>
+
+</div>
+    ]]>
+  </content>
+</module>
+

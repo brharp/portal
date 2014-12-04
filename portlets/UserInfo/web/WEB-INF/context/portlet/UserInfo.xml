@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING/DTD BEAN//EN" "../../dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="userInfoController"
+        class="ca.uoguelph.ccs.portal.userinfo.UserInfoController"
+        abstract="false" singleton="true" lazy-init="default"
+        autowire="default" dependency-check="default">
+  </bean>
+
+  <bean id="portletModeHandlerMapping" 
+        class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
+    <property name="portletModeMap">
+      <map>
+        <entry key="view"><ref bean="userInfoController"/></entry>
+      </map>
+    </property>
+  </bean>
+
+</beans>

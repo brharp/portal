@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+
+<!--
+    This is the master build file for the University of Guelph
+    portal. It assembles all required resources, compiles and
+    installs additional portal services, and compiles and 
+    deploys portlets.
+
+    The portal build exposes a variety of libs to the portlets
+    and services built as subprojects. These include jars
+    provided by the servlet container, and jars and classes
+    provided by the portal framework. Jar files provided by
+    the portal framework are not exposed to portlets, as they
+    will run in a separate servlet context and will not have
+    access to the portal lib directory.
+-->
+<project name="portal" default="dist" basedir=".">
+
+  <property file="${user.home}/build.properties" />
+  <property file="build.properties" />
+
+  <!--
+      Portal Build
+      
+      Builds and aggregates all portal content. This 'dist' target of
+      this build file collects all the static content, services, and
+      portlets required by the portal into a single archive, suitable
+      for deployment with 'deploy.bat'.
+  -->
+  
+  <property name="dist.home" value="${basedir}/dist"/>
+  <property name="build.home" value="${basedir}/build"/>
+  <property name="webapp.home" value="${build.home}/portal/unicon/Academus/portal-tomcat-a/webapps"/>
+  <property name="deploy.home" value="${root.home}"/>
+  <property name="pub.home" value="//Mirrors.cfs.uoguelph.ca/portal/builds"/>
+
+  <!--
+      Portlets may be built in any order: they should not have any
+      interdependencies. This fileset includes the build files for all
+      portlets in the 'portlets' directory, excluding those that are
+      depracated or don't fit into the build process. New portlets may
+      either be checked in directly to the portlets directory (best
+      for simple portlets that don't require their own version
+      control), or portlets from distinct modules may be checked out
+      into the portlets directory.
+  -->
+  <fileset id="portlets" dir="portlets" includes="**/build.xml">
+    <exclude name="BooKMarks/NewsReadersun/**"/>
+    <exclude name="BooKMarks/RSSBookMarks/**"/>
+    <exclude name="BooKMarks/NewsReader/**"/>
+    <exclude name="NotificationPortlet/**"/>
+    <exclude name="CampServ/**"/>
+    <exclude name="EAI/**"/>
+    <exclude name="SampleCategoryPortlet/**"/>
+    <exclude name="TargettedBrowsing/**"/>
+    <exclude name="utilities/**"/>
+    <exclude name="MyCourses/**"/>
+  </fileset>
+
+  <!--
+      The set of servlets to build.
+  -->
+  <fileset id="servlets" dir="servlets" includes="**/build.xml">
+  </fileset>
+
+  <!--
+      Ordered list of service build files. Services will be built in
+      the order defined here.
+  -->
+  <filelist id="services" dir="services">
+    <file name="sso/util/build.xml"/>
+    <file name="dashboard/targeted/build.xml"/>
+    <file name="feedback/build.xml"/>
+    <file name="search/directory"/>
+    <file name="calendar/build.xml"/>
+    <file name="proxy/build.xml"/>
+  </filelist>
+
+  <!--
+      Channels may be built in any order, they should not have any
+      interdependencies.
+  -->
+  <fileset id="channels" dir="channels" includes="**/build.xml">
+    <exclude name="EAI/**"/>
+    <exclude name="login/**"/>
+  </fileset>
+
+  <target name="update">
+    <cvs command="-q up -dP"/>
+  </target>
+
+  <target name="init">
+    <tstamp/>
+  </target>
+
+  <!--
+      Copies static content to the build directory.
+  -->
+  <target name="prepare" depends="init">
+    <mkdir dir="${build.home}"/>
+    <copy todir="${build.home}/portal">
+      <fileset dir=".">
+        <include name="unicon/**"/>
+      </fileset>
+    </copy>
+    <!-- 
+         HACK: Help files need to be moved from
+         .../portal/html/myportico/ccs/net to .../portal/html/net, but
+         I don't have the time to move them in CVS right now.
+    <move todir="${build.home}/portal/unicon/Academus/portal-tomcat-a/webapps/portal/html" 
+          file="${build.home}/portal/unicon/Academus/portal-tomcat-a/webapps/portal/html/myportico/ccs/net"/>
+    -->
+  </target>
+
+  <!--
+      Cleans the local, service, and portlet build directories.
+  -->
+  <target name="clean">
+    <delete dir="${build.home}" quiet="true" />
+    <subant target="clean">
+      <fileset refid="portlets"/>
+    </subant>
+  </target>
+
+  <target name="spotless" depends="clean">
+    <delete dir="${dist.home}" quiet="true" />
+  </target>
+
+  <!--
+      Compiles additional services (not portlets) required by the
+      portal.
+  -->
+  <target name="compile-services" depends="init,prepare">
+    <subant target="compile">
+      <property name="build.home" value="${webapp.home}/portal"/>
+      <filelist refid="services"/>
+    </subant>
+  </target>
+
+  <!--
+      Compiles additional channels (not portlets) required by the
+      portal.
+  -->
+  <target name="compile-channels" depends="init,prepare">
+    <subant target="compile">
+      <property name="build.home" value="${webapp.home}/portal"/>
+      <fileset refid="channels"/>
+    </subant>
+  </target>
+
+  <!--
+      Compiles services and channels.
+  -->
+  <target name="compile" depends="compile-services,compile-channels">
+  </target>
+
+  <!--
+      Deploys a default set of portlets to the webapps directory.
+  -->
+  <target name="deploy-portlets" depends="init,prepare">
+    <subant target="deploy">
+      <property name="deploy.home" value="${webapp.home}"/>
+      <fileset refid="portlets"/>
+    </subant>
+  </target>
+
+  <!--
+      Deploys a default set of portlets to the webapps directory.
+  -->
+  <target name="deploy-servlets" depends="init,prepare">
+    <subant target="deploy">
+      <property name="deploy.home" value="${webapp.home}"/>
+      <fileset refid="servlets"/>
+    </subant>
+  </target>
+
+  <!--
+      Deploys the portal to a local server.
+  -->
+  <target name="deploy" depends="init,prepare,compile,deploy-portlets,deploy-servlets">
+    <copy todir="${portal.home}">
+      <fileset dir="${build.home}"/>
+    </copy>
+  </target>
+
+  <!--
+      Builds a distribution archive.
+  -->
+  <target name="dist" depends="init,prepare,compile,deploy-portlets,deploy-servlets">
+    <mkdir dir="${dist.home}"/>
+    <tar destfile="${dist.home}/${ant.project.name}-${DSTAMP}-${TSTAMP}.tar.gz"
+         compression="gzip" longfile="gnu">
+      <tarfileset dir="${build.home}" username="as_unicon" group="nobody">
+        <include name="**/**"/>
+      </tarfileset>
+    </tar>
+  </target>
+
+  <!--
+      Builds an archive and copies it to the hourly/daily/etc archive
+      directory.
+  -->
+  <target name="pub" depends="dist">
+    <copy file="${dist.home}/${ant.project.name}-${DSTAMP}-${TSTAMP}.tar.gz"
+          tofile="${pub.home}/${ant.project.name}-LATEST.tar.gz"/>
+  </target>
+
+</project>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="module.xsl"?>
+<module>
+  <title>WEBMail</title>
+  <author>MyPortico</author>
+  <description>
+    Preview your email inbox.
+  </description>
+  <!--cached>true</cached-->
+  <help><![CDATA[
+    Click "open webmail" to view your messages.
+  ]]></help>
+  <attr><name>username</name><alias>username</alias></attr>
+  <pref>
+    <name>show</name>
+    <type>select</type>
+    <option value="new">New Messages</option>
+    <option value="unread">Unread Messages</option>
+    <default>unread</default>
+  </pref>
+  <content>
+    <![CDATA[
+
+    <script type="text/javascript">
+        function %MODULE_ID%_showMail(feedDom) {
+          var html = "";
+          var items = feedDom.getElementsByTagName("item");
+          if (items.length > 0) {
+            html += '<p>' + items.length + ' new message(s)</p>';
+            html += "<ul>";
+            for (var i = 0; i < items.length; i++) {
+              var item = items[i];
+              var title = item.getElementsByTagName("title")[0];
+              var from = item.getElementsByTagName("creator")[0] ||
+                         item.getElementsByTagName("dc:creator")[0];
+              html += "<li style='list-style-image:url(%MODULE_CONTEXT%images/mail.gif)'>";
+              var fromText = "From: "+from.firstChild.nodeValue.escapeHTML();
+              if (from) { 
+                html += "<span title='"+fromText+"'>";
+              }
+              if (title) {
+                html += title.firstChild.nodeValue.escapeHTML();
+              } else {
+                html += "no subject";
+              }
+              if (from) { 
+                html += "<span style='visibility:hidden'>"+fromText+"</span>";
+                html += "</span>";
+              }
+              html += "</li>";
+            }
+            html += "</ul>";
+          } else {
+            html += '<p>No new messages.</p>';
+          }
+          var feed = document.getElementById('%MODULE_ID%.mail');
+          feed.innerHTML = html;
+        }
+
+        function %MODULE_ID%_onload() {
+          %MODULE_TITLE%.innerHTML="WEBMail";
+          loadMail(%MODULE_ID%_showMail, "%MODULE_PREF_VALUE_show%");
+        }
+
+        function %MODULE_ID%_refresh() {
+          document.getElementById('%MODULE_ID%.mail').innerHTML = 
+          '<img src="%MODULE_CONTEXT%images/loading.gif"/><em>Loading...</em>';
+          %MODULE_ID%_onload();
+        }
+    </script>
+
+    <div id="%MODULE_ID%.mail">
+      <img src="%MODULE_CONTEXT%images/loading.gif"/>
+      <em>Loading...</em>
+    </div>
+
+    <p>
+    <a href='/portal/WEBmail' target='_blank'>open webmail</a>
+    -
+    <a href='javascript:%MODULE_ID%_refresh()'>check for new messages</a>
+    </p>
+    
+    ]]>
+  </content>
+</module>
+
+

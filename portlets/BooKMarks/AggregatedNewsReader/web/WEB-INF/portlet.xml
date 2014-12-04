@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app
+    xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd /
+opt/SUNWportal/dtd/portlet.xsd"
+    version="1.0">
+
+<portlet>
+    <portlet-name>RssPortlet</portlet-name>
+    <portlet-class>com.sun.portal.rssportlet.RssPortlet</portlet-class>
+    <expiration-cache>30</expiration-cache>
+    <supports>
+        <mime-type>text/html</mime-type>
+        <portlet-mode>edit</portlet-mode>
+        <portlet-mode>help</portlet-mode>
+    </supports>
+    <supported-locale>en_US</supported-locale>
+    <portlet-info>
+        <title>Rss Portlet</title>
+        <short-title>Sun: Rss</short-title>
+        <keywords>RSS, syndication, feed, Atom</keywords>
+    </portlet-info>
+    
+    
+    <user-attribute>
+        <description>uid</description>
+        <name>user.login.id</name>
+    </user-attribute>
+    <user-attribute>
+        <description>uid</description>
+        <name>user.login.password</name>
+    </user-attribute>
+    <user-attribute>
+        <description>uid</description>
+        <name>username</name>
+    </user-attribute>
+    <user-attribute>
+        <description>password</description>
+        <name>password</name>
+    </user-attribute>
+    <user-attribute>
+        <description>organizationalstatus</description>
+        <name>userRole</name>
+    </user-attribute>
+    <user-attribute>
+            <description>organizationalstatus</description>
+            <name>uPortalTemplateUserName</name>
+    </user-attribute>
+    <user-attribute>
+            <description>mail</description>
+            <name>mail</name>
+    </user-attribute>
+
+    <portlet-preferences>
+        <preference>
+            <name>showDesc</name>
+            <value>off</value>
+        </preference>
+
+        <preference>
+            <name>feedoutput</name>
+            <value>river</value>
+        </preference>
+
+	<preference>
+            <name>selectedFeedType</name>
+            <value>river</value>
+        </preference>
+
+	<preference>
+            <name>maxNewsPaperEntries</name>
+            <value>3</value>
+        </preference>
+
+        <preference>
+            <name>maxEntries</name>
+            <value>10</value>
+        </preference>
+        <preference>
+            <name>newWindow</name>
+            <value>true</value>
+        </preference>
+        <preference>
+            <name>disableMaxAge</name>
+            <value>true</value>
+        </preference>
+        <preference>
+            <name>maxAge</name>
+            <value>72</value>
+        </preference>
+        <preference>
+            <name>cacheTimeout</name>
+            <value>60</value>
+        </preference>
+        <preference>
+            <name>maxDescriptionLength</name>
+            <value>128</value>
+        </preference>
+        <preference>
+            <name>aggregate_feeds</name>	
+            <value>http://myportico.uoguelph.ca/portal/rss/ccsnews.xml</value>
+            <value>http://myportico.uoguelph.ca/portal/rss/cipexchange.xml</value>
+            <value>http://myportico.uoguelph.ca/portal/rss/cipfacstaff.xml</value>
+            <value>http://myportico.uoguelph.ca/portal/rss/cipstudent.xml</value>
+            <value>http://myportico.uoguelph.ca/portal/rss/collegeofarts.xml</value>
+            <value>http://myportico.uoguelph.ca/portal/rss/athletics.xml</value>
+            <value>http://myportico.uoguelph.ca/portal/rss/libnews.xml</value>
+            <value>http://myportico.uoguelph.ca/portal/rss/ovcnews.xml</value>
+            <value>http://myportico.uoguelph.ca/portal/rss/presnews.xml</value>
+            <value>http://myportico.uoguelph.ca/portal/rss/studaffairs.xml</value>
+            <value>http://myportico.uoguelph.ca/portal/rss/cionews.xml</value>
+        </preference>
+        
+    </portlet-preferences>
+  </portlet>
+</portlet-app>                

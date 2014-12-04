@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN" "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd"> 
+<mule-configuration id="UserOperationsConfig" version="1.0"> 
+	<description> </description> 
+	<!-- Conectores --> 
+	<connector name="user.jdbcConnector" className="org.mule.providers.jdbc.JdbcConnector"> 
+		<properties> 
+			<container-property name="dataSource" reference="PostgresDS"/> 
+		</properties> 
+	</connector> 
+
+	<bean id="PostgresDS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="url" value="jdbc:postgresql://localhost/uPortal" />
+		<property name="username" value="lalit" />
+		<property name="password" value="lalit" />
+	</bean>
+
+	<transformers> 
+		<transformer name="emailToString" className="org.mule.providers.email.transformers.EmailMessageToString"> 
+		</transformer> 
+	</transformers> 
+	
+	<model name="TEST"> 
+		<mule-descriptor name="testMail" implementation="org.mule.components.simple.BridgeComponent"> 
+			<inbound-router> 
+				<endpoint address="pop3://portaltm:pteam2@staff.mail.uoguelph.ca" transformers="emailToString"> 
+					<properties> 
+						<property name="checkFrequency" value="30000"/> 
+						<!--
+						<property name="trustStore" value="./trustore"/> 
+						<property name="trustStorePassword" value="trustNoOne"/> 
+						-->
+					</properties> 
+				</endpoint> 
+			</inbound-router> 
+			
+			<!--
+			 " +
+        "VALUES
+        -->
+			<outbound-router> 
+				<router className="org.mule.routing.outbound.OutboundPassThroughRouter"> 
+					<endpoint address="jdbc://insertMessage" connector="user.jdbcConnector" transformers="myTransformer"> 
+						<properties> 
+							<map name="queries"> 
+								<property name="insertMessage" value="INSERT INTO ufg_targetted_notifications (message_subject, message_from, role, message, importance, expiry) VALUES (${message_subject}, ${message_from}, ${role}, ${message}, ${importance}, ${expiry})"/> 
+							</map> 
+						</properties> 
+					</endpoint> 
+				</router> 
+			</outbound-router> 
+		</mule-descriptor> 
+	</model> 
+</mule-configuration>

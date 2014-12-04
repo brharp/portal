@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" version="1.0">
+
+  
+
+
+
+
+
+  <portlet>
+      <portlet-name>MyCourses</portlet-name>
+      <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+      <init-param>
+        <name>contextConfigLocation</name>
+        <value>
+          /WEB-INF/context/notification-data.xml,
+          /WEB-INF/context/mycourses-data.xml,
+          /WEB-INF/context/mycourses-portlet.xml
+        </value>
+      </init-param>
+      <supports>
+        <mime-type>text/html</mime-type>
+        <portlet-mode>view</portlet-mode>
+        <portlet-mode>edit</portlet-mode>
+      </supports>
+      <portlet-info>
+        <title>MyCourses</title>
+      </portlet-info>      
+    </portlet><portlet>
+      <portlet-name>MyExams</portlet-name>
+      <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+      <init-param>
+        <name>contextConfigLocation</name>
+        <value>
+          /WEB-INF/context/calendar-data.xml,
+          /WEB-INF/context/mycourses-data.xml,
+          /WEB-INF/context/myexams-portlet.xml
+        </value>
+      </init-param>
+      <supports>
+        <mime-type>text/html</mime-type>
+        <portlet-mode>view</portlet-mode>
+      </supports>
+      <portlet-info>
+        <title>MyExams</title>
+      </portlet-info>      
+    </portlet><portlet>
+      <portlet-name>NotificationPortlet</portlet-name>
+      <display-name>Notification Portlet</display-name>
+      <portlet-class>ca.uoguelph.ccs.portal.portlets.notification.bus.NotificationPortlet</portlet-class>
+      <expiration-cache>-1</expiration-cache>
+      <supports>
+        <mime-type>text/html</mime-type>
+        <portlet-mode>VIEW</portlet-mode>
+      </supports>
+      <portlet-info>
+        <title>NotificationPortlet</title>
+        <short-title>NotificationPortlet</short-title>
+      </portlet-info>
+      <init-param>
+        <name>contextConfigLocation</name>
+        <value>
+          /WEB-INF/context/notification-data.xml
+        </value>
+      </init-param>
+    </portlet><portlet>
+      <portlet-name>NotificationComposer</portlet-name>
+      <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+      <init-param>
+        <name>contextConfigLocation</name>
+        <value>
+          /WEB-INF/context/notification-data.xml,
+          /WEB-INF/context/notification-portlet.xml
+        </value>
+      </init-param>
+      <supports>
+        <mime-type>text/html</mime-type>
+        <portlet-mode>view</portlet-mode>
+      </supports>
+      <portlet-info>
+        <title>Notification Composer</title>
+      </portlet-info>
+    </portlet><portlet>
+      <portlet-name>Directory</portlet-name>
+      <portlet-class>ca.uoguelph.ccs.portal.directory.Directory</portlet-class>
+      <supports>
+        <mime-type>text/html</mime-type>
+        <portlet-mode>view</portlet-mode>
+      </supports>
+      <portlet-info>
+        <title>Directory Search</title>
+      </portlet-info>
+    </portlet><portlet>
+      <portlet-name>WebCT</portlet-name>
+      <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+      <init-param>
+        <name>contextConfigLocation</name>
+        <value>
+          /WEB-INF/context/webct-data.xml,
+          /WEB-INF/context/webct-portlet.xml
+        </value>
+      </init-param>
+      <supports>
+        <mime-type>text/html</mime-type>
+        <portlet-mode>view</portlet-mode>
+      </supports>
+      <portlet-info>
+        <title>WebCT</title>
+      </portlet-info>
+    </portlet><portlet>
+      <portlet-name>Version</portlet-name>
+      <portlet-class>ca.uoguelph.ccs.portal.Version</portlet-class>
+      <supports>
+        <mime-type>text/html</mime-type>
+        <portlet-mode>view</portlet-mode>
+      </supports>
+      <portlet-info>
+        <title>Version</title>
+      </portlet-info>
+    </portlet><user-attribute><name>username</name></user-attribute><user-attribute><name>uPortalTemplateUserName</name></user-attribute><user-attribute><name>uogcourses</name></user-attribute><user-attribute><name>uoginstructor</name></user-attribute><user-attribute><name>userRole</name></user-attribute><user-attribute><name>user.login.id</name></user-attribute><user-attribute><name>user.login.password</name></user-attribute><user-attribute><name>mail</name></user-attribute><user-attribute><name>term</name></user-attribute><user-attribute><name>lastName</name></user-attribute><user-attribute><name>degree</name></user-attribute><user-attribute><name>academiclevel</name></user-attribute><user-attribute><name>displayName</name></user-attribute>
+
+</portlet-app>

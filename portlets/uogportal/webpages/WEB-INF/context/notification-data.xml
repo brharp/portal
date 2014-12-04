@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "../dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" singleton="false">
+    <constructor-arg>
+      <ref bean="dataSource"/>
+    </constructor-arg>
+  </bean>
+
+  <bean id="targettedNotificationDAO" 
+        class="ca.uoguelph.ccs.portal.portlets.notification.db.UofGTargettedNotificationDAOJdbcImpl">
+    <property name="jdbcTemplate">
+      <ref bean="jdbcTemplate" />
+    </property>
+  </bean>
+
+  <bean id="userNotificationDAO" 
+        class="ca.uoguelph.ccs.portal.portlets.notification.db.UofGUserNotificationDAOJdbcImpl">
+    <property name="jdbcTemplate">
+      <ref bean="jdbcTemplate" />
+    </property>
+  </bean>
+<!--
+  <bean id="userLatestNotificationSeenDAO"
+        class="ca.uoguelph.ccs.portal.portlets.notification.db.UofGUserLatestNotificationSeenDAOJdbcImpl">
+    <property name="jdbcTemplate">
+      <ref bean="jdbcTemplate"/>
+    </property>
+  </bean>
+-->
+</beans>

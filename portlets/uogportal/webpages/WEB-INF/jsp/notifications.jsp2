@@ -1,0 +1,30 @@
+<%@ page import="javax.portlet.*"%>
+<%@ page import="javax.servlet.http.Cookie"%>
+
+<%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="x" uri="http://java.sun.com/jstl/xml" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
+
+
+<%@ page session="true" %>
+
+<portlet:defineObjects/>
+
+
+<%PortletSession psession = renderRequest.getPortletSession();
+	String sessionId = psession.getId();
+	System.out.println("sessid =" + sessionId);
+	<%--String uname = (String) psession.getAttribute("username");
+	String passwd = (String) psession.getAttribute("password");
+	System.out.println("unmae= " + uname);
+	System.out.println("passwd= " + passwd); --%>
+	Map user_notificationsMap = (Map)psession.getAttribute("user_notificationsMap");
+	<c:forEach var='item' items='${user_notificationsMap}'>
+   		<c:out value='Key=${item.key}, Value=${item.value}'/>
+   		<c:forEach var='valueMap' items='${item.value}'>
+	   		<c:out value='Key=${valueMap.key}, Value=${valueMap.value}'/>
+		</c:forEach>   
+	</c:forEach>
+%>

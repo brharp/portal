@@ -1,0 +1,65 @@
+<project name="SessionTimer" default="compile" basedir=".">
+
+	<property file="build.properties"/> 
+	
+	<path id="compile.classpath">
+	    <pathelement location="${servlet.jar}"/>	
+		<pathelement location="${commons-logging.jar}"/>
+	</path>
+	
+	<target name="init">
+		<mkdir dir="build" />
+		<mkdir dir="build/WEB-INF" />
+		<mkdir dir="build/WEB-INF/classes" />
+		<mkdir dir="build/WEB-INF/jsp" />
+		<mkdir dir="build/WEB-INF/lib" />
+		<mkdir dir="dist" />
+	</target>
+	
+	<target name="clean">
+		<delete dir="build" />
+		<delete dir="dist" />
+	</target>
+		
+	<target name="compile" depends="init">
+	    <javac 	srcdir="source"
+	            destdir="build/WEB-INF/classes"
+	            debug="${compile.debug}"
+	            deprecation="${compile.deprecation}"
+	            optimize="${compile.optimize}">
+	      <classpath refid="compile.classpath"/>
+	    	<classpath>
+	        <fileset dir="${tomcat.shared.lib.dir}">
+	          <include name="*.jar">
+	          </include>
+	        </fileset>
+	    	</classpath>
+	    </javac>	
+	</target>
+	
+	<target name="prepare" depends="compile">
+		<copy todir="build">
+			<fileset dir="web" />
+		</copy>
+	</target>
+	
+	<target name="dist" depends="prepare">
+		<jar destfile="dist/SessionTimer.war">
+			<fileset dir="build"/>
+		</jar>
+	</target>
+	
+	<target name="javadoc">
+			
+			<javadoc 	sourcepath="source" 
+						destdir="javadoc" 
+						packagenames="ca.uoguelph.ca.ccs.*" 
+						doctitle="SessionTimer - ${project.version}"
+						windowtitle="SessionTimer - ${project.version}"
+						access="public" 
+						author="true" 
+						version="true"/>
+			
+		</target>
+	
+</project>

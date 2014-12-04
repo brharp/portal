@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="module.xsl"?>
+<module>
+  <title>MyAgenda</title>
+  <author>MyPortico</author>
+  <description>
+    Preview your Oracle Calendar agenda.
+  </description>
+  <pref>
+    <name>username</name>
+    <type>string</type>
+    <default></default>
+  </pref>
+  <pref>
+    <name>events</name>
+    <type>select</type>
+    <multiple>true</multiple>
+    <option value="/uPortal/proxy/ocal.rdf?S=Athletics%20Events|Athletics Events">
+      Athletics Events</option>
+    <option value="/uPortal/proxy/ocal.rdf?S=OVC%20Events|OVC Events">
+      OVC Events</option>
+    <default></default>
+  </pref>
+  <content>
+    <![CDATA[
+
+    <style type="text/css">
+      .special { background-color: #88F; }
+    </style>
+
+    <div id='%MODULE_ID%_calendar'></div>
+
+    <div id='%MODULE_ID%_agenda'>
+      <script type='text/javascript'>
+        if ("%MODULE_PREF_VALUE_username%" == "" && '%MODULE_MODE%' != 'edit') {
+          var html = [
+            "<div style='border:2px dashed #DDD;padding:1em;margin:1em'>",
+              "Use Oracle Calendar? Click 'Edit' and enter your Oracle ",
+              "Calendar user name to see your Oracle Calendar agenda here. ",
+              "(Note: Your Oracle Calendar password must be set to your ",
+              "central login password).",
+            "</div>"
+          ];
+          document.writeln(html.join(''));
+        }
+      </script>        
+    </div>
+
+    <div id='%MODULE_ID%_events'></div>
+
+    <div id='%MODULE_ID%_showAll' 
+         style='display:none;text-align:center;width=100%;font-size:x-small'>
+      <em><a href='javascript:%MODULE_ID%_redisplay(null)'
+       >Show All Events</a></em>
+    </div>
+
+    <script>
+
+      // This code was written by Tyler Akins and has been placed in the
+      // public domain.  It would be nice if you left this header intact.
+      // Base64 code from Tyler Akins -- http://rumkin.com
+
+      var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+      function encode64(input) {
+         var output = "";
+         var chr1, chr2, chr3;
+         var enc1, enc2, enc3, enc4;
+         var i = 0;
+
+         do {
+            chr1 = input.charCodeAt(i++);
+            chr2 = input.charCodeAt(i++);
+            chr3 = input.charCodeAt(i++);
+
+            enc1 = chr1 >> 2;
+            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+            enc4 = chr3 & 63;
+
+            if (isNaN(chr2)) {
+                enc3 = enc4 = 64;
+            } else if (isNaN(chr3)) {
+               enc4 = 64;
+            }
+
+            output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) + 
+               keyStr.charAt(enc3) + keyStr.charAt(enc4);
+         } while (i < input.length);
+   
+         return output;
+      }
+
+      function %MODULE_ID%_update(container,r,url,name)
+      {
+        if (r.readyState == 4) {
+          if (r.status == 200) {
+            RDF.parseXML(r.responseXML, url);
+            RDF.index();
+            %MODULE_ID%_display(container, url, name);
+          } else {
+            $(container).innerHTML = [
+              "<img src='%MODULE_CONTEXT%images/error.gif'/>",
+              "<em>", name, " failed to load (", r.status, ").</em>",
+              "<span style='visibility:hidden'>", r.statusText, "</span>"
+            ].join('');
+          }
+        }
+      }
+
+      function q (s) {
+        return ["'",s,"'"].join('');
+      }
+
+      var %MODULE_ID%_FILTER = null;
+
+      function %MODULE_ID%_display(container,url,name)
+      {
+        var results = RDF.runquery({
+          select: [ '?dtstval', '?dtendval', '?summary', '?location' ],
+          where: [
+            {s: '?ev',      p: 'rdf:type', o: 'Vevent',    g: url},
+            {s: '?ev',      p: 'dtstart',  o: '?dtstart',  g: url},
+            {s: '?ev',      p: 'dtend',    o: '?dtend',    g: url},
+            {s: '?ev',      p: 'summary',  o: '?summary',  g: url},
+            {s: '?dtstart', p: 'dtstval',  o: '?dtstval',  g: url},
+            {s: '?dtend',   p: 'dtendval', o: '?dtendval', g: url, optional: true},
+            {s: '?ev',      p: 'location', o: '?location', g: url, optional: true}
+          ],
+          order: function(r,q) {
+            return r.dtstval < q.dtstval ? -1 : r.dtstval > q.dtstval ? 1 : 0;
+          },
+          filter: function(r) {
+            return !(%MODULE_ID%_FILTER &&
+               r.dtstval.indexOf(%MODULE_ID%_FILTER) != 0);
+          }
+        });
+
+        if (results.length === 0) {
+          return;
+        }
+
+        var dt;
+        var e = new Array();
+        e.push("<b>", name, "</b>");
+        e.push("<table class='vcalendar' style='border-collapse:collapse;width:100%'>");
+        for (var i = 0; i < results.length; i++) {
+          var re = results[i];
+          var ds = formatDate(re.dtstval);
+          var ts = formatTime(re.dtstval);
+          var es = formatTime(re.dtendval);
+          var ss = re.summary;
+          var ls = re.location;
+          var tt = ss + (ls ? " (" + ls + ")" : "") + 
+                   (ts ? " " + ts : "") + (es ? "-" + es : "");
+          e.push(
+            "<tr>", // I would put the border style here, but IE sucks.
+              "<td valign='top'",
+                  dt==ds ? " style='border-top:thin solid #DDD;padding:2px'"
+                         : " style='border-top:thin solid #AAA;padding:2px'", ">",
+                "<span", dt==ds ? " style='visibility:hidden'" : "", ">", 
+                  "<nobr>", ds, "</nobr>",
+                "</span>", 
+              "</td>",
+              "<td valign='top'",
+                  dt==ds ? " style='border-top:thin solid #DDD;padding:2px'"
+                         : " style='border-top:thin solid #AAA;padding:2px'", ">",
+                "<div style='float:right'> ", ts, " </div>",
+                "<span title=", q(tt), ">", ss, "</span>",
+              "</td>",
+            "</tr>"
+          );
+          dt = ds;
+          %MODULE_ID%_SPECIAL_DAYS[results[i].dtstval.substring(0,8)] = true;
+        }
+        e.push("</table><br/>");
+
+        $(container).innerHTML = e.join('');
+
+        %MODULE_ID%_mycal.refresh();
+      }
+
+      function %MODULE_ID%_loadCal(user, pass, url, name, container)
+      {
+        var div = document.createElement('div');
+        div.innerHTML =
+          '<img src="%MODULE_CONTEXT%images/loading.gif"/>' +
+          '<em>Loading ' + name + '...</em>';
+        $(container).appendChild(div);
+        %MODULE_ID%_request(user, pass, url, name, div);
+      }
+
+      function %MODULE_ID%_onSelect(cal)
+      {
+        if (!cal.dateClicked) return;
+
+        var y = cal.date.getFullYear();
+        var m = cal.date.getMonth();
+        var d = cal.date.getDate();
+        date = [y,(m<9)?('0'+(m+1)):(m+1),(d<10)?('0'+d):(d)].join('');
+        
+        %MODULE_ID%_redisplay(date);
+      }
+
+      function %MODULE_ID%_redisplay(date)
+      {
+        %MODULE_ID%_FILTER = date;
+
+        Element.update('%MODULE_ID%_agenda', '');
+        Element.update('%MODULE_ID%_events', '');
+
+        // Display personal agenda.
+
+        if ('%MODULE_PREF_VALUE_username%') {
+          var firstLast = '%MODULE_PREF_VALUE_username%'.match(/(\S+)\s+(.+)/);
+          var firstName = firstLast[1];
+          var lastName = firstLast[2];
+          var id = '%MODULE_SESSION%';
+          var query = $H({S: lastName, G: firstName, ID: id}).toQueryString();
+          var url = "/uPortal/proxy/ocal.rdf?"+query;
+          var div = document.createElement('div');
+          $('%MODULE_ID%_agenda').appendChild(div);
+          %MODULE_ID%_display(div, url, 'Oracle Calendar');
+        }
+
+        // Display public event calendars.
+
+        var cn = '%MODULE_ATTR_VALUE_firstName% %MODULE_ATTR_VALUE_lastName%';
+        var events = "%MODULE_PREF_VALUES_events%".split(", ");
+        for (var i = 0; i < events.length; i++) {
+          if (events[i]) {
+            var parts = events[i].split("|");
+            var div = document.createElement('div');
+            $('%MODULE_ID%_events').appendChild(div);
+            %MODULE_ID%_display(div, parts[0], parts[1]);
+          }
+        }
+
+        if (%MODULE_ID%_FILTER)
+          Element.show('%MODULE_ID%_showAll');
+        else
+          Element.hide('%MODULE_ID%_showAll');
+      }
+
+      function %MODULE_ID%_refresh()
+      {
+        // Display personal agenda.
+
+        if ('%MODULE_PREF_VALUE_username%') {
+          var username = '%MODULE_PREF_VALUE_username%';
+          var password = 'x';
+          var firstLast = username.match(/(\S+)\s+(.+)/);
+          var firstName = firstLast[1];
+          var lastName = firstLast[2];
+          var id = '%MODULE_SESSION%';
+          var query = $H({S: lastName, G: firstName, ID: id}).toQueryString();
+          var url = "/uPortal/proxy/ocal.rdf?"+query;
+          %MODULE_ID%_loadCal(username, password, 
+            url, 'Oracle Calendar', '%MODULE_ID%_agenda');
+        }
+
+        // Display public event calendars.
+
+        if ('%MODULE_PREF_VALUE_username%') {
+          var username = '%MODULE_PREF_VALUE_username%';
+          var password = 'x';
+          var events = "%MODULE_PREF_VALUES_events%".split(", ");
+          for (var i = 0; i < events.length; i++) {
+            if (events[i]) {
+              var parts = events[i].split("|");
+              %MODULE_ID%_loadCal(username, password, 
+                parts[0], parts[1], "%MODULE_ID%_events");
+            }
+          }
+        }
+      }
+
+      function %MODULE_ID%_request(username, password, url, name, container)
+      {
+        var r = Ajax.getTransport();
+        r.open('POST', url, true);
+        r.onreadystatechange = function() {
+          %MODULE_ID%_update(container, r, url, name);
+        };
+        r.setRequestHeader("Authorization", 
+          "BASIC " + encode64(username+":"+password));
+        r.send('');
+      }
+
+      var %MODULE_ID%_SPECIAL_DAYS = {};
+      var %MODULE_ID%_TODAY = new Date();
+     
+      function %MODULE_ID%_dateStatus(date, y, m, d) {
+        if (date.getDate() == %MODULE_ID%_TODAY.getDate() &&
+            date.getMonth() == %MODULE_ID%_TODAY.getMonth() &&
+            date.getFullYear() == %MODULE_ID%_TODAY.getFullYear()) {
+          return false;
+        }
+        var x = [y,(m<9)?('0'+(m+1)):(m+1),(d<10)?('0'+d):(d)].join('');
+        if (%MODULE_ID%_SPECIAL_DAYS[x])
+          return false;
+        return true;
+      }
+
+      function %MODULE_ID%_setupCalendar()
+      {
+        %MODULE_ID%_mycal = Calendar.setup({
+          flat: '%MODULE_ID%_calendar',
+          flatCallback: %MODULE_ID%_onSelect,
+          disableFunc: %MODULE_ID%_dateStatus,
+          weekNumbers: false
+        });
+      }
+
+      function %MODULE_ID%_onload() {
+        if ('%MODULE_MODE%' != 'edit') {
+          %MODULE_ID%_setupCalendar();
+          %MODULE_ID%_refresh();
+        }
+      }
+
+    </script>
+
+    ]]>
+  </content>
+</module>

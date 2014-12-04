@@ -1,0 +1,15 @@
+<html>
+<body>
+<script>
+var r = new XMLHttpRequest();
+r.open("POST", "/portal/proxy/squid", false);
+//r.send("GET http://bourque.org HTTP/1.1\n\n");
+r.send("GET http://127.0.0.1:8080/atomcal/.xcs?S=Harp&G=Brent HTTP/1.1\n\
+Authorization: BASIC QnJlbnQgSGFycDp4ZXc5OThleA==\n\
+\n");
+document.writeln(r.responseText);
+</script>
+</body>
+</html>
+
+

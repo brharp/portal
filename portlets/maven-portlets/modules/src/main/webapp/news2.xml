@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <title>News</title>
+  <pref>
+    <name>feed</name>
+    <type>string</type>
+    <default></default>
+  </pref>
+  <pref>
+    <name>count</name>
+    <type>select</type>
+    <option>5</option>
+    <option>10</option>
+    <option>15</option>
+    <option value='undefined'>all</option>
+    <default>5</default>
+  </pref>
+  <content>
+    <![CDATA[
+    <script type="text/javascript">
+        function %MODULE_ID%_onload() {
+          new FeedProxy.Updater('%MODULE_ID%.feed', '%MODULE_PREF_VALUE_feed%',
+            {
+              count: %MODULE_PREF_VALUE_count%,
+              onComplete: function(transport, feed) {
+                // Set channel title to feed title.
+                %MODULE_TITLE%.firstChild.data = feed.title;
+                // Register handler for the 'Open in new window' link.
+                Event.observe('%MODULE_ID%.open', 'click', function(evt) {
+                  window.open(feed.link); 
+                }, false);
+                // Register handler for the 'Subscribe' link.
+                Event.observe('%MODULE_ID%.subs', 'click', function(evt) {
+                  prompt("Copy this address to your news reader.",
+                         "%MODULE_PREF_VALUE_feed%");
+                }, false);
+              }
+            });
+        }
+    </script>
+
+    <div id="%MODULE_ID%.links" class="news-links">
+      <span style='font-size:xx-small'>
+        <span id='%MODULE_ID%.open'>
+          <a href='#'>Open in new window</a>
+          <a href='#'><img border='0' src="%MODULE_CONTEXT%images/newwin.png" 
+                           align='absmiddle'/></a>
+        </span>
+        <span id='%MODULE_ID%.subs'>
+          <a href='#'>Subscribe</a>
+          <a href='#'><img border='0' src="%MODULE_CONTEXT%images/feed.png" 
+                           align='absmiddle'/></a>
+        </span>
+      </span>
+    </div>
+
+    <div id="%MODULE_ID%.feed" class="news-feed">
+      <img src="%MODULE_CONTEXT%images/loading.gif"/>
+      <em>Loading...</em>
+    </div>
+
+    ]]>
+  </content>
+</module>
+

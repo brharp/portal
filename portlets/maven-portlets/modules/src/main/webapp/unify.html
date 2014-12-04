@@ -1,0 +1,142 @@
+<html>
+<head>
+  <title>Unify</title>
+  <script src='lib/prototype.js'></script>
+  <script type='text/javascript'>
+  //<![CDATA[
+
+    function varp (x) {
+      return x.charAt(0) == '?';
+    }
+    
+    function subject(triple) {
+      return triple.s;
+    }
+
+    function predicate(triple) {
+      return triple.p;
+    }
+
+    function object(triple) {
+      return triple.o;
+    }
+
+    function unify (a, b, e) {
+      if (typeof a == 'string' && typeof b == 'string') {
+        if (varp(a) && varp(b)) {
+          return e[a] == e[b];
+        }
+        else if (varp(a)) {
+          if (e[a]) {
+            return e[a] == b;
+          } else {
+            e[a] = b;
+            return true;
+          }
+        }
+        else if (varp(b)) {
+          if (e[b]) {
+            return e[b] == a;
+          } else {
+            e[b] = a;
+            return true;
+          }
+        }
+        else {
+          return a == b;
+        }
+      }
+      else {
+        return unify(subject(a), subject(b), e) &&
+               unify(predicate(a), predicate(b), e) &&
+               unify(object(a), object(b), e);
+      }
+    }
+
+    var db = [
+      {s: '#1',    p: 'rdf:type', o: 'Message'},
+      {s: 'INBOX', p: 'rdf:type', o: 'Mailbox'},
+      {s: '#2',    p: 'rdf:type', o: 'Message'},
+      {s: '#1',    p: 'envelope', o: 'e1'     },
+      {s: 'e1',    p: 'subject',  o: 'Hello'  },
+      {s: '#2',    p: 'envelope', o: 'e2'     },
+      {s: 'e2',    p: 'subject',  o: 'World!' },
+      {s: 'e1',    p: 'from',     o: 'Brent'  }
+    ];
+    
+    function Goal(pattern) {
+      this.pattern = pattern;
+    }
+
+    Goal.prototype.call = function(env) {
+      for (var i = 0; i < db.length; i++) {
+        var e = Object.extend({}, env);
+        if (unify(this.pattern, db[i], e)) {
+          this.exit(e);
+        }
+      }
+    };
+
+    Goal.prototype.exit = function (e) {
+      if (this.next) this.next.call(e);
+      //for(x in e) {
+      //  document.writeln(x + '=' + e[x] + '<br/>');
+      //}
+    };
+
+    
+    function select(variables,where) {
+      var results = [];
+      var g = new Goal();
+      g.call = function (e) {
+        var row = {};
+        for (var v = 0; v <  variables.length; v++) {
+          row[variables[v].substring(1)] = e[variables[v]];
+        }
+        results.push(row);
+      }
+      for (var p = where.length-1; p >= 0; p--) {
+        var f = new Goal(where[p]);
+        f.next = g;
+        g = f;
+      }
+      g.call({});
+      return results;
+    }
+
+  //]]>   
+  </script>
+</head>
+
+
+<body>
+
+  <script type='text/javascript'>
+  //<![CDATA[
+    var g = new Goal({s: '?msg', p: 'rdf:type', o: 'Message' });
+    var f = new Goal({s: '?msg', p: 'envelope', o: '?env' });
+    var k = new Goal({s: '?env', p: 'subject',  o: '?subject'});
+    g.next = f;
+    f.next = k;
+    g.call({});
+
+    document.writeln('<hr/>');
+
+    var results = select(['?subject', '?from'],[
+      {s: '?msg', p: 'rdf:type', o: 'Message' },
+      {s: '?msg', p: 'envelope', o: '?env' },
+      {s: '?env', p: 'subject',  o: '?subject' },
+      {s: '?env', p: 'from',     o: '?from' }
+    ]);
+
+    for (var i = 0; i < results.length; i++) {
+      var r = results[i];
+      for (var p in r) {
+        document.writeln(p + '=' + r[p] + '<br/>');
+      }
+    }
+  //]]>
+  </script>
+
+</body>
+</html>

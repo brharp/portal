@@ -1,0 +1,107 @@
+<schema>
+
+  <table name="uog_courses">
+    <column name="code"      type="varchar" not-null="true"/>
+    <column name="website"   type="varchar"/>
+    <column name="resources" type="varchar"/>
+    <column name="classlist" type="varchar"/>
+    <constraint name="uog_courses_pkey" type="primary-key">
+      <key name="code"/>
+    </constraint>
+  </table>
+
+  <sequence name="uog_course_resources_resource_id_seq"/>
+
+  <table name="uog_course_resources">
+    <column name="resource_id" type="int4" not-null="true"
+            default="nextval('uog_course_resources_resource_id_seq'::text)"/>
+    <column name="course"      type="varchar"/>
+    <column name="description" type="varchar"/>
+    <column name="url"         type="varchar"/>
+    <column name="published"   type="bool"/>
+    <constraint name="uog_course_resources_pkey" type="primary-key">
+      <key name="resource_id"/>
+    </constraint>
+  </table>
+  
+  <table name="uog_course_delegates">
+    <column name="course" type="varchar" not-null="true"/>
+    <column name="userid" type="varchar" not-null="true"/>
+    <constraint name="uog_course_delegates_pkey" type="primary-key">
+      <key name="course"/>
+      <key name="userid"/>
+    </constraint>
+  </table>
+
+  <sequence name="ufg_targetted_notifications_message_id_seq"/>
+
+  <table name="ufg_targetted_notifications">
+    <column name="role" type="varchar"/>
+    <column name="message" type="text" not-null="true"/>
+    <column name="message_subject" type="varchar" not-null="true"/>
+    <column name="message_from" type="varchar" not-null="true"/>
+    <column name="expiry" type="timestamp"/>
+    <column name="message_id" type="int4" not-null="true"
+            default="nextval('ufg_targetted_notifications_message_id_seq'::text)"/>
+    <column name="importance" type="varchar"/>
+    <column name="user_id" type="text"/>
+    <column name="owner" type="varchar" not-null="true"/>
+    <column name="release" type="timestamp"/>
+    <constraint name="pk_message_id" type="primary-key">
+      <key name="message_id"/>
+    </constraint>
+  </table>
+
+  <table name="ufg_user_latest_message">
+    <column name="user_id" type="varchar" not-null="true"/>
+    <column name="message_id" type="int4" not-null="true"/>
+    <constraint name="pk_user_id" type="primary-key">
+      <key name="user_id"/>
+    </constraint>
+  </table>
+  
+  <table name="ufg_user_notifications">
+    <column name="user_id" type="varchar" not-null="true"/>
+    <column name="message_id" type="int4" not-null="true"/>
+    <column name="mark_expiry" type="timestamp"/>
+    <column name="message_subject" type="varchar" not-null="true"/>
+    <column name="message_from" type="varchar" not-null="true"/>
+    <column name="importance" type="varchar"/>
+    <column name="mark_opened" type="timestamp"/>
+    <column name="mark_read" type="timestamp"/>
+    <column name="owner" type="varchar" not-null="true"/>
+    <column name="role" type="varchar"/>
+    <column name="release" type="timestamp"/>
+    <!--
+    <constraint name="msg_id_ufg_targetted_notifications" type="foreign-key">
+      <key name="message_id"/>
+      <fkey table="ufg_targetted_notifications" name="message_id"
+            match="simple" update="restrict" delete="cascade"/>
+    </constraint>
+    <constraint name="usr_msg_id" type="unique">
+      <key name="user_id"/>
+      <key name="message_id"/>
+    </constraint>
+    -->
+  </table>
+
+  <table name="uog_person_dir">
+    <column name="user_name" type="varchar" not-null="true"/>
+    <column name="uogcourses" type="varchar"/>
+    <column name="uoginstructor" type="varchar"/>
+    <column name="organizationalstatus" type="varchar"/>
+    <column name="uogterm" type="varchar"/>
+    <column name="uogdegree" type="varchar"/>
+    <column name="uogstudentgrad" type="varchar"/>
+    <constraint name="uog_person_dir_pkey" type="primary-key">
+      <key name="user_name"/>
+    </constraint>
+  </table>
+
+  <table name="last_login">
+    <column name="username" type="varchar"/>
+    <column name="last_login_time" type="timestamp"/>
+  </table>
+
+</schema>
+

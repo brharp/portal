@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <title>Google Cal</title>
+  <pref><name>account</name><type>string</type><default></default></pref>
+  <pref><name>height</name><type>string</type><default>640</default></pref>
+  <pref><name>show</name><type>string</type><default>1</default></pref>
+  <content>
+    <![CDATA[
+    <script type="text/javascript">
+    %MODULE_TITLE%.firstChild.data="Google Cal";
+    if ("%MODULE_PREF_VALUE_account%"=="") {
+      document.write('<em>Edit preferences to set your account name.</em>');
+    } else {
+      document.write('<iframe src="http://www.google.com/calendar/embed?src=%MODULE_PREF_VALUE_account%&amp;chrome=NAVIGATION&amp;mode=AGENDA&amp;height=%MODULE_PREF_VALUE_height%&amp;epr=%MODULE_PREF_VALUE_show%" style="border-width:0" width="100%" frameborder="0" height="%MODULE_PREF_VALUE_height%"></iframe>');
+    }
+    </script>
+    ]]>
+  </content>
+</module>
+

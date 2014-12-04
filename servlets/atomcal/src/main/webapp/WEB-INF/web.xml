@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web 
+Application 2.3//EN" "http://java.sun.com/dtd/web-
+app_2_3.dtd">
+
+<web-app>
+
+  <display-name>atomcal</display-name>
+
+  <listener>
+    <listener-class>ca.uoguelph.ccs.atomcal.AliasProperties</listener-class>
+  </listener>
+
+  <!--
+      Opml Servlet: Exports public channels as OPML.
+  -->
+  <servlet>
+    <servlet-name>opml</servlet-name>
+    <servlet-class>ca.uoguelph.ccs.atomcal.OpmlServlet</servlet-class>
+  </servlet>
+
+  <!--
+      iCal Servlet: Exports calendars in iCal format.
+  -->
+  <servlet>
+    <servlet-name>ical</servlet-name>
+    <servlet-class>ca.uoguelph.ccs.atomcal.ICalServlet</servlet-class>
+    <init-param>
+      <param-name>host</param-name>
+      <param-value>schedule.uoguelph.ca</param-value>
+    </init-param>
+    <init-param>
+      <param-name>extendedIdAttributes</param-name>
+      <param-value>G,S</param-value>
+    </init-param>
+  </servlet>
+
+  <!--
+      iCal -> xCal Filter: Converts iCal to xCal formats.
+  -->
+  <filter>
+    <filter-name>xcal</filter-name>
+    <filter-class>ca.uoguelph.ccs.atomcal.ICal2XCalFilter</filter-class>
+  </filter>
+
+  <!--
+      Date Filter.
+  -->
+  <filter>
+    <filter-name>date</filter-name>
+    <filter-class>ca.uoguelph.ccs.atomcal.RegexFilter</filter-class>
+    <init-param>
+      <param-name>find</param-name>
+      <param-value>(\d{4})(\d{2})(\d{2})</param-value>
+    </init-param>
+    <init-param>
+      <param-name>replace</param-name>
+      <param-value>$1-$2-$3</param-value>
+    </init-param>
+  </filter>
+
+  <!--
+      Date-Time Filter.
+  -->
+  <filter>
+    <filter-name>date-time</filter-name>
+    <filter-class>ca.uoguelph.ccs.atomcal.RegexFilter</filter-class>
+    <init-param>
+      <param-name>find</param-name>
+      <param-value>(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z</param-value>
+    </init-param>
+    <init-param>
+      <param-name>replace</param-name>
+      <param-value>$1-$2-$3T$4:$5:$6Z</param-value>
+    </init-param>
+  </filter>
+
+  <!--
+      xCal -> Atom filter.
+  -->
+  <filter>
+    <filter-name>atom</filter-name>
+    <filter-class>ca.uoguelph.ccs.atomcal.XsltFilter</filter-class>
+    <init-param>
+      <param-name>stylesheet</param-name>
+      <param-value>xcal2atom.xsl</param-value>
+    </init-param>
+  </filter>
+
+  <!--
+      xCal -> RSS filter.
+  -->
+  <filter>
+    <filter-name>rss</filter-name>
+    <filter-class>ca.uoguelph.ccs.atomcal.XsltFilter</filter-class>
+    <init-param>
+      <param-name>stylesheet</param-name>
+      <param-value>xcal2rss.xsl</param-value>
+    </init-param>
+  </filter>
+
+  <!--
+      xCal -> RDF filter.
+  -->
+  <filter>
+    <filter-name>rdf</filter-name>
+    <filter-class>ca.uoguelph.ccs.atomcal.XsltFilter</filter-class>
+    <init-param>
+      <param-name>stylesheet</param-name>
+      <param-value>xcal2rdf.xsl</param-value>
+    </init-param>
+  </filter>
+
+  <!--
+      xCal -> JSON filter.
+  -->
+  <filter>
+    <filter-name>json</filter-name>
+    <filter-class>ca.uoguelph.ccs.atomcal.XsltFilter</filter-class>
+    <init-param>
+      <param-name>stylesheet</param-name>
+      <param-value>xcal2json.xsl</param-value>
+    </init-param>
+    <init-param>
+      <param-name>contentType</param-name>
+      <param-value>application/json; charset=UTF-8</param-value>
+    </init-param>
+  </filter>
+
+  <!--
+      Alias filter.
+  -->
+  <filter>
+    <filter-name>alias</filter-name>
+    <filter-class>ca.uoguelph.ccs.atomcal.AliasFilter</filter-class>
+    <init-param>
+      <param-name>userId</param-name>
+      <param-value>Brent Harp</param-value>
+    </init-param>
+    <init-param>
+      <param-name>password</param-name>
+      <param-value>xew998ex</param-value>
+    </init-param>
+  </filter>
+
+  <!--
+      iCal export mapping.
+  -->
+
+  <filter-mapping>
+    <filter-name>alias</filter-name>
+    <url-pattern>*.ics</url-pattern>
+  </filter-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ical</servlet-name>
+    <url-pattern>*.ics</url-pattern>
+  </servlet-mapping>
+
+  <!--
+      xCal export mapping.
+  -->
+
+  <filter-mapping>
+    <filter-name>alias</filter-name>
+    <url-pattern>*.xcs</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>xcal</filter-name>
+    <url-pattern>*.xcs</url-pattern>
+  </filter-mapping>
+    
+  <servlet-mapping>
+    <servlet-name>ical</servlet-name>
+    <url-pattern>*.xcs</url-pattern>
+  </servlet-mapping>
+
+  <!--
+      Atom export mappings.
+  -->
+
+  <filter-mapping>
+    <filter-name>alias</filter-name>
+    <url-pattern>*.atom</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>atom</filter-name>
+    <url-pattern>*.atom</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>date</filter-name>
+    <url-pattern>*.atom</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>date-time</filter-name>
+    <url-pattern>*.atom</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>xcal</filter-name>
+    <url-pattern>*.atom</url-pattern>
+  </filter-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ical</servlet-name>
+    <url-pattern>*.atom</url-pattern>
+  </servlet-mapping>
+
+  <!--
+      RSS export mappings.
+  -->
+
+  <filter-mapping>
+    <filter-name>alias</filter-name>
+    <url-pattern>*.rss</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>rss</filter-name>
+    <url-pattern>*.rss</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>date</filter-name>
+    <url-pattern>*.rss</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>date-time</filter-name>
+    <url-pattern>*.rss</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>xcal</filter-name>
+    <url-pattern>*.rss</url-pattern>
+  </filter-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ical</servlet-name>
+    <url-pattern>*.rss</url-pattern>
+  </servlet-mapping>
+
+  <!--
+      RDF export mappings.
+  -->
+
+  <filter-mapping>
+    <filter-name>alias</filter-name>
+    <url-pattern>*.rdf</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>rdf</filter-name>
+    <url-pattern>*.rdf</url-pattern>
+  </filter-mapping>
+
+  <!--filter-mapping>
+    <filter-name>date</filter-name>
+    <url-pattern>*.rdf</url-pattern>
+  </filter-mapping-->
+
+  <!--filter-mapping>
+    <filter-name>date-time</filter-name>
+    <url-pattern>*.rdf</url-pattern>
+  </filter-mapping-->
+
+  <filter-mapping>
+    <filter-name>xcal</filter-name>
+    <url-pattern>*.rdf</url-pattern>
+  </filter-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ical</servlet-name>
+    <url-pattern>*.rdf</url-pattern>
+  </servlet-mapping>
+
+  <!--
+      JSON export mappings.
+  -->
+
+  <filter-mapping>
+    <filter-name>alias</filter-name>
+    <url-pattern>*.json</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>json</filter-name>
+    <url-pattern>*.json</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>xcal</filter-name>
+    <url-pattern>*.json</url-pattern>
+  </filter-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ical</servlet-name>
+    <url-pattern>*.json</url-pattern>
+  </servlet-mapping>
+
+  <!--
+      OPML mapping.
+  -->
+
+  <servlet-mapping>
+    <servlet-name>opml</servlet-name>
+    <url-pattern>*.opml</url-pattern>
+  </servlet-mapping>
+
+</web-app>

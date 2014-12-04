@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <title>Grades</title>
+  <attr><name>username</name><alias>username</alias></attr>
+  <attr><name>password</name><alias>password</alias></attr>
+  <pref>
+    <name>term</name>
+    <type>select</type>
+    <option>W07</option>
+    <option>S07</option>
+    <default>W07</default>
+  </pref>
+  <pref>
+    <name>show</name>
+    <type>select</type>
+    <option value='5'>My 5 most recent Scanner files</option>
+    <option value='undefined'>All my Scanner files</option>
+    <default>5</default>
+  </pref>
+  <content>
+    <![CDATA[
+    <script type="text/javascript">
+      function %MODULE_ID%_onload() {
+        %MODULE_ID%_load();
+      }
+      function %MODULE_ID%_load() {
+        var p = "";
+        p += "?_service=pool_1";
+        p += "&term=%MODULE_PREF_VALUE_term%";
+        p += "&show=%MODULE_PREF_VALUE_show%";
+        p += "&userid=@username@";
+        p += "&password=@password@";
+        p += "&_program=tscorep.testrss.sas";
+        
+        var r = new XMLHttpRequest();
+        r.open("GET", "/portal/ws/sas"+p, true);
+        r.onreadystatechange = function() {
+          if (r.readyState == 4 && r.status == 200) {
+            var e = document.getElementById("%MODULE_ID%.content");
+            e.innerHTML = r.responseText;
+          }
+        };
+        r.send();
+      }
+    </script>
+
+    <div id="%MODULE_ID%.content">
+    </div>
+
+    <a href="javascript:%MODULE_ID%_load()">Refresh</a>
+    ]]>
+  </content>
+</module>

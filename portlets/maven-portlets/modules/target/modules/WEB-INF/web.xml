@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+
+    <display-name>Module Portlet</display-name>
+
+    <!-- 
+         XML Proxy 
+    -->
+
+    <servlet>
+      <servlet-name>XmlProxyServlet</servlet-name>
+      <servlet-class>ca.uoguelph.ccs.portal.modules.ProxyServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>XmlProxyServlet</servlet-name>
+      <url-pattern>/xmlProxy</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- 
+         Mail Proxy 
+    -->
+
+    <servlet>
+      <servlet-name>MailProxyServlet</servlet-name>
+      <servlet-class>ca.uoguelph.ccs.portal.modules.MailProxy</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>MailProxyServlet</servlet-name>
+      <url-pattern>/mailProxy</url-pattern>
+    </servlet-mapping>
+
+
+    <!--
+        Feed Proxy (deprecated) 
+    -->
+
+    <servlet>
+      <servlet-name>FeedProxyServlet</servlet-name>
+      <servlet-class>ca.uoguelph.ccs.portal.modules.FeedProxy</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>FeedProxyServlet</servlet-name>
+      <url-pattern>/feedProxy</url-pattern>
+    </servlet-mapping>
+
+    
+    <!--
+        Web Proxy
+    -->
+
+    <servlet>
+      <servlet-name>WebProxyServlet</servlet-name>
+      <servlet-class>ca.uoguelph.ccs.portal.modules.ProxyServlet</servlet-class>
+    </servlet>
+
+    <filter>
+      <filter-name>WebProxyFilter</filter-name>
+      <filter-class>ca.uoguelph.ccs.portal.modules.WebProxy</filter-class>
+    </filter>
+
+    <filter-mapping>
+      <filter-name>WebProxyFilter</filter-name>
+      <url-pattern>/webProxy</url-pattern>
+    </filter-mapping>
+
+    <servlet-mapping>
+      <servlet-name>WebProxyServlet</servlet-name>
+      <url-pattern>/webProxy</url-pattern>
+    </servlet-mapping>
+
+    
+    <!--
+        RSS Proxy
+    -->
+
+    <servlet>
+      <servlet-name>RssProxyServlet</servlet-name>
+      <servlet-class>ca.uoguelph.ccs.portal.modules.ProxyServlet</servlet-class>
+    </servlet>
+
+    <filter>
+      <filter-name>RssProxyFilter</filter-name>
+      <filter-class>ca.uoguelph.ccs.portal.modules.RssProxy</filter-class>
+    </filter>
+
+    <filter-mapping>
+      <filter-name>RssProxyFilter</filter-name>
+      <url-pattern>/rssProxy</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+      <filter-name>WebProxyFilter</filter-name>
+      <url-pattern>/rssProxy</url-pattern>
+    </filter-mapping>
+
+    <servlet-mapping>
+      <servlet-name>RssProxyServlet</servlet-name>
+      <url-pattern>/rssProxy</url-pattern>
+    </servlet-mapping>
+
+</web-app>

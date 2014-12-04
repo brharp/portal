@@ -1,0 +1,3 @@
+<Context path="/feedreader" 
+         docBase="../PlutoDomain/feedreader.war" 
+         crossContext="true"/>        

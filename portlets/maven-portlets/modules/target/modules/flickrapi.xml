@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <title>Flickr</title>
+  <pref><name>tag</name><type>string</type><default>MyPortico</default></pref>
+  <!--<pref name=count type=string default=3 max=5 min=1/>-->
+  <content>
+    <![CDATA[
+
+    <center id="%MODULE_ID%_photos"></center>
+
+    <script type="text/javascript">
+    function %MODULE_ID%_jsonFlickrApi(rsp){
+      if (rsp.stat != "ok"){
+        // something broke!
+        var img = document.createElement('img');
+        img.setAttribute("src", "/portal/media/images/loginImg2.jpg");
+        %MODULE_ID%_photos.appendChild(img);
+        return;
+      }
+      var div = document.getElementById("%MODULE_ID%_photos");
+      var i = Math.floor( Math.random() * rsp.photos.photo.length + 1 );
+      var photo = rsp.photos.photo[i];
+      var a = document.createElement('a');
+      a.setAttribute('href', 'http://www.flickr.com/photos/'+photo.owner+'/');
+      var img = document.createElement('img');
+      img.setAttribute('src', 'http://static.flickr.com/'+photo.server+'/'+photo.id+'_'+photo.secret+'.jpg');
+      img.setAttribute('border', 'none');
+      a.appendChild(img);
+      document.getElementById('%MODULE_ID%_photos').appendChild(a);
+    }
+
+    function %MODULE_ID%_onload() {
+      %MODULE_TITLE%.firstChild.data = "%MODULE_PREF_VALUE_tag% Photos";
+    }
+    </script>
+
+    <script type="text/javascript" src="http://www.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key=f8ac9fbed1f72c4bf65e19fa443384cf&tags=%MODULE_PREF_VALUE_tag%&jsoncallback=%MODULE_ID%_jsonFlickrApi"></script>
+
+    ]]>
+  </content>
+</module>
+

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <parent>
+    <groupId>ca.uoguelph.ccs</groupId>
+    <artifactId>portlets</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ca.uoguelph.ccs</groupId>
+  <artifactId>flickr-portlet</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>flickr-portlet</name>
+    
+  <!-- Build Overrides for Portlet Deployment. -->
+  <build>
+    <finalName>${pom.name}</finalName>
+    <plugins>
+      <!-- configure maven-war-plugin to use updated web.xml -->
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <webXml>${project.build.directory}/pluto-resources/web.xml</webXml>
+        </configuration>
+      </plugin>
+      <!-- bind 'pluto:assemble' goal to 'process-resources' lifecycle -->
+      <plugin>
+        <artifactId>maven-pluto-plugin</artifactId>
+        <version>${pluto.version}</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>assemble</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- Override the 'integration-test' lifecycle phase
+             with a custom one that runs a simple Ant script -->
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>integration-test</phase>
+            <configuration>
+              <tasks>
+                <!-- Set tomcat.home to CATALINA_HOME environmental variable 
+                     Use this to skip -Dpluto.home=/path/to/pluto on command line -->
+                <property environment="env"/>
+                <property name="pluto.home" value="${env.CATALINA_HOME}"/>
+                <echo message="pluto.home=${pluto.home}"/>
+                <!-- Remove former deployment because sometimes
+                     tomcat does not fully redeploy a war -->
+                <delete
+                    dir="${pluto.home}/webapps/${pom.name}"
+                    failonerror="true"
+                    />
+                <!-- Deploy war file -->
+                <copy
+                    file="${project.build.directory}/${pom.name}.war"		
+                    todir="${pluto.home}/PlutoDomain"
+                    overwrite="true"
+                    />
+                <!-- Deploy context deployment descriptor for Tomcat -->
+                <copy
+                    file="${basedir}/src/main/resource/${pom.name}.xml"		
+                    todir="${pluto.home}/conf/Catalina/localhost"
+                    overwrite="true"
+                    />
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
+

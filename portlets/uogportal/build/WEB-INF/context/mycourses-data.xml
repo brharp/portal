@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "../../dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="courseService"
+        class="ca.uoguelph.ccs.portal.mycourses.CourseService">
+    <property name="delegateDao"><ref bean="delegateDao"/></property>
+    <property name="courseServiceUrl" 
+              value="http://www.uoguelph.ca/registrar/calendars/apps/courses/index.cfm?output=xml&amp;search={code}" />
+    <property name="examServiceUrl" 
+              value="http://www.uoguelph.ca/registrar/scheduling/apps/exams/index.cfm?semester={sem}&amp;search={code}&amp;surname={lastName}&amp;output=XML" />
+    <property name="semester" value="F05"/>
+    <property name="userInfoReplacementTokens">
+      <list>
+        <value>lastName</value>
+        <value>academiclevel</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="resourceDao"
+        class="ca.uoguelph.ccs.portal.mycourses.ResourceDaoJdbc">
+    <property name="dataSource"><ref bean="dataSource"/></property>
+    <property name="incrementer"><ref bean="resourceIdIncrementer"/></property>
+  </bean>
+
+  <bean id="resourceIdIncrementer" parent="abstractIncrementer">
+    <property name="incrementerName" value="uog_course_resources_resource_id_seq"/>
+  </bean>
+
+  <bean id="delegateDao"
+        class="ca.uoguelph.ccs.portal.mycourses.DelegateDaoJdbc">
+    <property name="dataSource"><ref bean="dataSource"/></property>
+  </bean>
+
+</beans>

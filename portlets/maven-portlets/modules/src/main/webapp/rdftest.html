@@ -1,0 +1,49 @@
+<html xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+  <title>RDF Test</title>
+  <script type='text/javascript' src='lib/prototype.js'></script>
+  <script type='text/javascript' src='lib/rdf.js'></script>
+</head>
+<body>
+
+  <script type='text/javascript'>
+  //<![CDATA[
+
+    var r = Ajax.getTransport();
+    r.open('get', 'mailsample.xml', false);
+    r.onreadystatechange = function() {
+      if (r.readyState == 4 && r.status == 200) {
+        RDF.parseXML(r.responseXML);
+      }
+    };
+    r.send();
+
+    for (var i = 0; i < RDF.db.length; i++) {
+      document.writeln(RDF.db[i].s);
+      document.writeln(RDF.db[i].p);
+      document.writeln(RDF.db[i].o);
+      document.writeln('<br/>');
+    }
+
+    document.writeln('<hr/>');
+
+    var results = RDF.select(
+      ['?subject', '?from', '?flag'],
+      [{s: '?msg', p: 'rdf:type', o: 'Message'},
+       {s: '?msg', p: 'envelope', o: '?env'},
+       {s: '?env', p: 'subject',  o: '?subject'},
+       {s: '?env', p: 'from',     o: '?from'},
+       {s: '?msg', p: 'flag',     o: '?flag'}
+      ]);
+
+    for (var i = 0; i < results.length; i++) {
+      var r = results[i];
+      for (var p in r) {
+        document.writeln(p + '=' + r[p] + '<br/>');
+      }
+    }
+  //]]>
+  </script>
+
+</body>
+</html>

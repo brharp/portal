@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "../../dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="webCtService"
+        class="ca.uoguelph.ccs.portal.webct.WebCtService">
+    <property name="hostname" value="webct-app2.cs.uoguelph.ca"/>
+    <property name="username" value="admin"/>
+    <property name="password" value="T6T7arp"/>
+    <property name="secret"   value="MyP0rt1c0uP0rta113WebCT60"/>
+    <property name="globalLearningContextId">
+      <value>URN:X-WEBCT-VISTA-V1:4280349b-8368-5b4d-0148-cd5bb4b4eb20</value>
+    </property>
+  </bean>
+
+</beans>

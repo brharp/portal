@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <title>Battle Chess</title>
+  <content>
+    <![CDATA[
+<script type='text/javascript'>%MODULE_TITLE%.firstChild.data="Battle Chess";</script>
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+ codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+ WIDTH="360" HEIGHT="225" id="battlechess" ALIGN="">
+ <PARAM NAME="movie" VALUE="http://nvmodules.typhon.net/victor/games/chess/battlechess.swf" /> <PARAM NAME="quality" VALUE="low" /> <PARAM NAME="bgcolor" VALUE="#000000" /> <EMBED src="http://nvmodules.typhon.net/victor/games/chess/battlechess.swf" quality="low" bgcolor="#000000"  WIDTH="360" HEIGHT="225" NAME="battlechess" ALIGN=""
+ TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer"></EMBED>
+</OBJECT>
+    ]]>
+  </content>
+</module>
+

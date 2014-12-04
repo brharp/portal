@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <title>Clock</title>
+  <content>
+    <![CDATA[
+      <script>
+        function %MODULE_ID%_showTime() {
+          document.getElementById('%MODULE_ID%.x').innerHTML = 
+            new Date().toString();
+        }
+        function %MODULE_ID%_onload() {
+          setInterval(%MODULE_ID%_showTime, 1000);
+        }
+      </script>
+      <div id="%MODULE_ID%.x">
+        Loading...
+      </div>
+    ]]>
+  </content>
+</module>

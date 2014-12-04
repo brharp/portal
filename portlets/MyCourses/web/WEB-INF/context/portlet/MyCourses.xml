@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "../../dtd/spring-beans.dtd">
+<beans>
+
+  <bean id="myCoursesController" 
+        class="ca.uoguelph.ccs.portal.mycourses.MyCoursesController" 
+        abstract="false" singleton="true" lazy-init="default" 
+        autowire="default" dependency-check="default">
+    <property name="courseDao"><ref bean="courseDao"/></property>
+  </bean>
+
+  <!-- Handler Mapping -->
+  
+  <bean id="portletModeHandlerMapping" class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
+    <property name="portletModeMap">
+      <map>
+        <entry key="view"><ref bean="myCoursesController"/></entry>
+      </map>
+    </property>
+  </bean>
+
+  <!-- Exceptions Handler -->
+
+  <bean id="defaultExceptionHandler" parent="defaultExceptionHandlerTemplate"/>
+
+  <!-- JDBC -->
+
+  <bean id="courseDao"
+        class="ca.uoguelph.ccs.portal.mycourses.CourseDaoJdbc">
+    <property name="dataSource"><ref bean="dataSource"/></property>
+  </bean>
+
+  <bean id="dataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+        destroy-method="close">
+    <property name="driverClassName"><value>org.postgresql.Driver</value></property>
+    <property name="url"><value>jdbc:postgresql://localhost/portal</value></property>
+    <property name="username"><value>postgres</value></property>
+    <property name="password"><value>postgres</value></property>
+  </bean>
+    
+</beans>

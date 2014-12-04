@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "../../dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="notificationEditController"
+        class="ca.uoguelph.ccs.portal.portlets.notification.bus.NotificationEditController">
+    <property name="notificationDao"><ref bean="targettedNotificationDAO"></ref></property>
+  </bean>
+
+  <bean id="portletModeHandlerMapping"
+        class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
+    <property name="portletModeMap">
+      <map>
+        <entry key="view"><ref bean="notificationEditController"/></entry>
+      </map>
+    </property>
+  </bean>
+  
+</beans>

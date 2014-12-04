@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mule-configuration PUBLIC "-//SymphonySoft //DTD mule-configuration XML V1.0//EN" "http://www.symphonysoft.com/dtds/mule/mule-configuration.dtd"> 
+<mule-configuration id="UserOperationsConfig" version="1.0"> 
+	<description> </description> 
+
+ 	<container-context className="org.mule.extras.spring.SpringContainerContext">
+         <properties>
+             <property name="configFile" value="PostgresDS.xml"/>
+         </properties>
+     </container-context>
+ 
+	<!-- Conectores --> 
+	<connector name="user.jdbcConnector" className="org.mule.providers.jdbc.JdbcConnector"> 
+		<properties> 
+			<container-property name="dataSource" reference="PostgresDS"/> 
+		</properties> 
+	</connector> 
+
+<connector name="smtpConnector" className="org.mule.providers.email.SmtpConnector">
+<properties>
+<property name="hostname" value="outbound.mail.uoguelph.ca" />
+</properties>
+</connector>
+
+
+<!-- className="org.mule.providers.email.transformers.EmailMessageToString" --> 
+
+	<transformers> 
+		<transformer name="emailToString" className="ca.uoguelph.ccs.portal.portlets.notification.mule.transformers.EmailToTargetedMessageTransformer"> 
+		</transformer> 
+
+		<transformer name="mapToTargetedMessage" className="ca.uoguelph.ccs.portal.portlets.notification.mule.transformers.MapToTargetedMessageTransformer"> 
+		</transformer> 
+
+		<transformer name="TargetedMessageToEmailAckTransformer" className="ca.uoguelph.ccs.portal.portlets.notification.mule.transformers.TargetedMessageToEmailAckTransformer"> 
+		</transformer> 
+	</transformers> 
+	
+	<model name="TargetMessage"> 
+		<mule-descriptor name="testMail" implementation="org.mule.components.simple.BridgeComponent"> 
+			<inbound-router> 
+				<endpoint address="pop3://portaltm:pteam2@staff.mail.uoguelph.ca" transformers="emailToString"> 
+					<properties> 
+						<property name="checkFrequency" value="30000"/> 
+						<!--
+						<property name="trustStore" value="./trustore"/> 
+						<property name="trustStorePassword" value="trustNoOne"/> 
+						-->
+					</properties> 
+				</endpoint> 
+			</inbound-router> 
+			
+			<outbound-router> 
+				<!-- <router className="org.mule.routing.outbound.OutboundPassThroughRouter"> -->
+				<router className="org.mule.routing.outbound.ChainingRouter">
+					<endpoint address="jdbc://insertMessage" connector="user.jdbcConnector" transformers="mapToTargetedMessage"> 
+						<properties> 
+							<map name="queries"> 
+								<property name="insertMessage" value="INSERT INTO ufg_targetted_notifications (message_subject, message_from, owner, message, user_id, importance, role) VALUES (${message_subject}, ${message_from}, ${owner}, ${message}, ${user}, ${importance}, ${role})"/> 
+							</map> 
+						</properties> 
+					</endpoint> 
+					
+					<endpoint address="smtp://outbound.mail.uoguelph.ca"   connector="smtpConnector"  transformers="TargetedMessageToEmailAckTransformer"/>
+				</router> 
+			</outbound-router> 
+		</mule-descriptor> 
+	</model> 
+</mule-configuration>

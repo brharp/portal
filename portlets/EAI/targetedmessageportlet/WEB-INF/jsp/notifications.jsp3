@@ -1,0 +1,131 @@
+<%@ page import="javax.portlet.*"%>
+<%@ page import="java.util.*"%>
+
+<%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="x" uri="http://java.sun.com/jstl/xml" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+
+
+<%@ page session="true" %>
+
+<portlet:defineObjects/>
+
+
+<%PortletSession psession = renderRequest.getPortletSession();
+	List user_notificationsMap = (List)psession.getAttribute("user_notificationsMap");
+	pageContext.setAttribute("user_notificationsMap", user_notificationsMap);
+
+%>
+
+ <c:choose>
+        <c:when test='${empty user_notificationsMap}'>
+<!--
+	<div id="input-container">
+	<ul id="input-nav"> 
+<portlet:param name="COMMAND" value="Delete"/>
+-->
+	<br />
+            No new notifications.
+	<form action="<portlet:renderURL><portlet:param name="COMMAND" value="Refresh"/></portlet:renderURL>" method="post">
+		<input class="uportal-button" type="submit" value="Refresh">
+	</form>
+
+        </c:when>
+        <c:otherwise>
+
+	<form action="<portlet:actionURL></portlet:actionURL>" method="post">
+
+	<br />
+
+	<br />
+	<br />
+
+<div id="jive-frontpage">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tbody>
+        <tr valign="top">
+
+        <td width="99%">
+                <div class="jive-forum-list">
+                <div class="jive-table">
+                        <table summary="targetted messages" cellpadding="0"
+ cellspacing="0" width="100%">
+                                <thead>
+                            <tr>
+                                <th  width="5%" class="jive-first">Delete</th>
+                                <th  width="35%">Message</th>
+                                <th  width="35%">From</th>
+                                <th  width="25%" class="jive-last">Expiry</th>
+                            </tr>
+                                </thead>
+                                <tbody>
+
+	<c:forEach var='item' items='${user_notificationsMap}'>
+
+	<c:set var='messageId' 
+           value='${item["message_id"]}'/>
+
+
+
+        <tr class="jive-even">
+	 <td width="5%" class="jive-first" valign="top">
+		<input align="middle" type="checkbox" name="delete_msg_id" value="${messageId}"/></td>
+
+   		<c:forEach var='valueMap' items='${item}'>
+			<c:if test='${valueMap.key != "message_id"}'>
+			 <c:choose>
+        		<c:when test='${valueMap.key == "message_subject"}'>
+		   		<td width="25%">
+					<a class="forum-link" href="<portlet:renderURL>
+   							<portlet:param name="COMMAND" value="DISPLAY" />
+ 							<portlet:param name="DISPLAY_MSG_ID" value="${messageId}" />
+						</portlet:renderURL>" >${valueMap.value}
+					</a>
+				</td>
+			</c:when>
+		        <c:otherwise>
+		   		<td width="35%">${valueMap.value}		
+				</td>
+
+		        </c:otherwise>
+			    </c:choose>
+
+			</c:if>
+		</c:forEach>   
+		</tr>
+	</c:forEach>
+                              </tbody>
+                        </table>
+                </div>
+                </div>
+        </td>
+        </tr>
+</tbody>
+</table>
+</div>
+<!--
+	<div id="input-container">
+	<ul id="input-nav">
+-->
+	<input class="uportal-button" name= "COMMAND" type="submit" value="Delete">
+
+	<input class="uportal-button" name= "COMMAND" type="submit" value="Refresh">
+	</form>
+        </c:otherwise>
+    </c:choose>
+
+	<br />	
+
+<!--
+	<form action="<portlet:renderURL><portlet:param name="COMMAND" value="REFRESH"/></portlet:renderURL>" method="post">
+		<input class="uportal-button" type="submit" value="Refresh">
+	</form>
+-->
+	<br />	
+
+<!--
+	</ul>
+	</div>
+-->

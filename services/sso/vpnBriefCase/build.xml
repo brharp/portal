@@ -1,0 +1,180 @@
+
+<project name="JiveSSO" default="compile" basedir=".">
+
+  <!-- Load user property definition overrides -->
+  <property file="build.properties"/>
+  <property file="${user.home}/build.properties"/>
+
+
+
+  <property name="app.name"      value="webmailSSO"/>
+  <property name="app.version"   value="1.0"/>
+  <property name="build.home"    value="build"/>
+  <property name="lib"    value="build"/>
+  <property name="deploy.home"   value="(set this in build.properties!)"/>
+  <property name="dist.home"     value="dist"/>
+
+  <property name="compile.debug"       value="true"/>
+  <property name="compile.deprecation" value="false"/>
+  <property name="compile.optimize"    value="true"/>
+
+  <path id="compile.classpath">
+
+    <!-- Include all JAR files that will be included in /WEB-INF/lib -->
+    <pathelement location="${uPortal.jar}"/>
+    <pathelement location="${log4j.jar}"/>
+    <pathelement location="${servlet.jar}"/>
+    <pathelement location="${xml-apis.jar}"/>
+    <pathelement location="${commons-logging.jar}"/>
+    <pathelement location="${commons-httpclient-3.1-beta1.jar}"/>
+  </path>
+
+
+
+<!-- ==================== All Target ====================================== -->
+
+<!--
+
+  The "all" target is a shortcut for running the "clean" target followed
+  by the "compile" target, to force a complete recompile.
+
+-->
+
+  <target name="all" depends="clean,dist"
+   description="Clean build and dist, then compile"/>
+
+
+<!-- ==================== Clean Target ==================================== -->
+
+<!--
+
+  The "clean" target deletes any previous "build" and "dist" directory,
+  so that you can be ensured the application can be built from scratch.
+
+-->
+
+  <target name="clean"
+   description="Delete old build and dist directories">
+    <delete dir="${build.home}"/>
+    <delete dir="${deploy.home}"/>
+    <delete dir="${dist.home}"/>
+  </target>
+
+
+
+<!-- ==================== Compile Target ================================== -->
+
+<!--
+
+  The "compile" target transforms source files (from your "src" directory)
+  into object files in the appropriate location in the build directory.
+  This example assumes that you will be including your classes in an
+  unpacked directory hierarchy under "/WEB-INF/classes".
+
+-->
+
+  <target name="compile"
+   description="Compile Java sources">
+
+    <!-- Compile Java classes as necessary -->
+    <mkdir    dir="${build.home}/WEB-INF/classes"/>
+    <javac srcdir="source"
+          destdir="${build.home}/WEB-INF/classes"
+            debug="${compile.debug}"
+      deprecation="${compile.deprecation}"
+         optimize="${compile.optimize}">
+      <classpath refid="compile.classpath"/>
+    </javac>
+
+    <!-- Copy all stylesheets and stylesheet list files -->
+    <copy  todir="${build.home}">
+      <fileset dir="webpages" includes="**/*.jsp"/>
+    </copy>
+  </target>
+
+
+
+<!-- ==================== Deploy Target =================================== -->
+
+<!--
+
+  The "deploy" target copies the contents of the build directory into a
+  location required by our servlet container, and picks up any external
+  dependencies along the way.  AFter restarting the servlet container, you
+  can now test your web application.
+
+-->
+
+  <target name="deploy" depends="compile"
+   description="Deploy application to servlet container">
+
+    <!-- Copy the classes of the build directory -->
+    <mkdir dir="${deploy.home}/WEB-INF/lib"/>
+    <jar destfile="${deploy.home}/WEB-INF/lib/${app.name}-${app.version}.jar">
+      <fileset dir="${build.home}/WEB-INF/classes"
+        excludes="**/*.xsl,**/*.ssl"
+      />
+    </jar>  
+
+  	<copy todir="${deploy.home}">
+		<fileset dir="${build.home}" />
+    </copy>
+    <copy todir="${deploy.home}/WEB-INF/lib">
+		<fileset file="${commons-httpclient-3.1-beta1.jar}" />
+    </copy>
+    <copy todir="${deploy.home}/WEB-INF/jsp">
+		<fileset file="${build.home}/webpages/*.jsp" />
+    </copy>
+  	
+  </target>
+
+
+
+<!-- ==================== Dist Target ===================================== -->
+<!--
+  The "dist" target creates a binary distribution of your application
+  in a directory structure ready to be archived in a tar.gz or zip file.
+-->
+  <target name="dist" depends="deploy">
+    <mkdir dir="${dist.home}"/>
+    <tar destfile="${dist.home}">
+      <tarfileset dir="${deploy.home}"
+          prefix="unicon/Academus/portal-tomcat-a/webapps/portal"
+          preserveLeadingSlashes="true"
+          username="nobody"
+          group="nobody"
+      />
+    </tar>
+  </target>
+
+
+<!-- ==================== Javadoc Target ================================== -->
+
+<!--
+
+  The "javadoc" target creates Javadoc API documentation for the Java
+  classes included in your application.  Normally, this is only required
+  when preparing a distribution release, but is available as a separate
+  target in case the developer wants to create Javadocs independently.
+
+-->
+
+  <target name="javadoc" depends="compile"
+   description="Create Javadoc API documentation">
+
+    <mkdir dir="${dist.home}/docs/api"/>
+    <javadoc packagenames="*"
+             sourcepath="src"
+             classpathref="compile.classpath"
+             destdir="${dist.home}/docs/api"
+             author="true"
+             version="true"
+             windowtitle="${app.name} ${app.version} API Documentation">
+      <doctitle><![CDATA[${app.name} ${app.version}<br/>API Documentation]]></doctitle>
+      <header><![CDATA[${app.name} ${app.version}<br/>API Documentation]]></header>
+      <bottom><![CDATA[<i>Copyright &#169; 2007 CCS, UofG All Rights Reserved.</i>]]></bottom>
+    </javadoc>
+
+  </target>
+
+</project>

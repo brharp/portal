@@ -1,0 +1,92 @@
+<html xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+  <title>Unify</title>
+  <script type='text/javascript' src='lib/prototype.js'></script>
+  <script type='text/javascript' src='lib/rdf.js'></script>
+</head>
+<body>
+
+  <script type='text/javascript'>
+  //<![CDATA[
+
+    function parseXML (doc) {
+      var rdf = doc.documentElement;
+      var c = rdf.childNodes;
+      for (var i = 0; i < c.length; i++) {
+        parseXMLNode(c[i]);
+      }
+    }
+
+    function parseXMLNode(node) {
+      // Text
+      if (node.nodeType == 3) { 
+        return node.nodeValue;
+      }
+      // Element
+      else if (node.nodeType == 1) { 
+        var about = node.getAttribute('rdf:about') || 
+                    node.getAttribute('about') ||
+                    RDF.anonymousNode();
+        var type  = node.getAttribute('rdf:type') ||
+                    node.getAttribute('type') ||
+                    node.nodeName;
+        RDF.insert(about, 'rdf:type', type);
+        var c = node.childNodes;
+        for (var i = 0; i < c.length; i++) {
+          parseXMLProperty(c[i], about);
+        }
+        return about;
+      }
+    }
+
+    function parseXMLProperty(propNode, subject) {
+      if (propNode.nodeType == 1) {
+        var p = propNode.nodeName;
+        var c = propNode.childNodes;
+        for (var i = 0; i < c.length; i++) {
+          var o = parseXMLNode(c[i]);
+          if (o.match(/\S/)) {
+            RDF.insert(subject, p, o);
+          }
+        }
+      }
+    }
+
+    var r = Ajax.getTransport();
+    r.open('get', 'mailsample.xml', false);
+    r.onreadystatechange = function() {
+      if (r.readyState == 4 && r.status == 200) {
+        parseXML(r.responseXML);
+      }
+    };
+    r.send();
+
+    for (var i = 0; i < RDF.db.length; i++) {
+      document.writeln(RDF.db[i].s);
+      document.writeln(RDF.db[i].p);
+      document.writeln(RDF.db[i].o);
+      document.writeln('<br/>');
+    }
+
+    document.writeln('<hr/>');
+
+    var results = RDF.select(
+      ['?subject', '?from', '?flag'],
+      [{s: '?msg', p: 'rdf:type', o: 'Message'},
+       {s: '?msg', p: 'envelope', o: '?env'},
+       {s: '?env', p: 'subject',  o: '?subject'},
+       {s: '?env', p: 'from',     o: '?from'},
+       {s: '?msg', p: 'flag',     o: '?flag'}
+      ]);
+
+    for (var i = 0; i < results.length; i++) {
+      var r = results[i];
+      for (var p in r) {
+        document.writeln(p + '=' + r[p] + '<br/>');
+      }
+    }
+  //]]>
+  </script>
+
+</body>
+</html>

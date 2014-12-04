@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+                         "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app version="2.4" 
+    xmlns="http://java.sun.com/xml/ns/j2ee" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-app_2_4.xsd">
+
+
+    <display-name>NotificationPortlet</display-name>
+    <description/>
+    <context-param>
+        <param-name>org.mule.config</param-name>
+        <param-value>/WEB-INF/config/mule-config.xml,</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.mule.config.builders.MuleXmlBuilderContextListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>NotificationPortlet</servlet-name>
+        <display-name>NotificationPortlet Wrapper</display-name>
+        <description>Automated generated Portlet Wrapper</description>
+        <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+        <init-param>
+            <param-name>portlet-class</param-name>
+            <param-value>ca.uoguelph.ccs.portal.portlets.notification.bus.NotificationPortlet</param-value>
+        </init-param>
+        <init-param>
+            <param-name>portlet-guid</param-name>
+            <param-value>ugPortlets.NotificationPortlet</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>NotificationPortlet</servlet-name>
+        <url-pattern>/NotificationPortlet/*</url-pattern>
+    </servlet-mapping>
+    <taglib>
+        <taglib-uri>http://java.sun.com/portlet</taglib-uri>
+        <taglib-location>/WEB-INF/tld/portlet.tld</taglib-location>
+    </taglib>
+    
+    <taglib>
+	  	<taglib-uri>http://jakarta.apache.org/taglibs/mailer-1.1</taglib-uri>
+	  	<taglib-location>/WEB-INF/mailer.tld</taglib-location>
+	</taglib>
+
+<resource-ref>
+ <description>postgreSQL Datasource example</description>
+ <res-ref-name>jdbc/mydb</res-ref-name>
+ <res-type>javax.sql.DataSource</res-type>
+ <res-auth>Container</res-auth>
+</resource-ref>
+
+</web-app>

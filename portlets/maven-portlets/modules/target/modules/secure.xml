@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <title>Secure</title>
+  <attr><name>username</name><alias>username</alias></attr>
+  <attr><name>password</name><alias>password</alias></attr>
+  <content>
+    <![CDATA[
+    <script type="text/javascript">
+        function %MODULE_ID%_onload() {
+          loadFeed("http://localhost:8400/portal/null?foo=bar", function(feedDom) {}, true, 
+                   "%MODULE_ATTR_VALUE_username%", "%MODULE_ATTR_VALUE_password%",
+                   "username", "password");
+        }
+    </script>
+    ]]>
+  </content>
+</module>
+

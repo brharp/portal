@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!-- configure the viewResolver and define where the JSP files are -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="cache"><value>false</value></property>
+		<property name="viewClass"><value>org.springframework.web.servlet.view.JstlView</value></property>
+		<property name="prefix"><value>/WEB-INF/jsp/</value></property>
+		<property name="suffix"><value>.jsp</value></property>
+	</bean>
+	
+ <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="/Feedback">feedbackFormController</prop>
+            </props>
+        </property>
+    </bean>
+	
+	<!-- exceptionResolver will direct any uncaught exceptions to the error view 
+	     (so the end-user doesn't get nasty error messages) -->
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="defaultErrorView"><value>feedback_error</value></property>
+	</bean>
+	
+	<!-- the feedbackFormController and its dependencies
+	     (mailSender and messageFormatter are defined in applicationContext.xml) -->
+	<bean id="feedbackFormController" class="ca.uoguelph.ccs.portal.services.feedback.web.FeedbackFormController">
+  		<property name="sessionForm"><value>false</value></property>
+  		<property name="commandClass"><value>ca.uoguelph.ccs.portal.services.feedback.beans.Feedback</value></property>
+  		<property name="formView"><value>feedback_form</value></property>
+  		<property name="successView"><value>feedback_success</value></property>
+  		
+  		<property name="validator">
+			<bean class="ca.uoguelph.ccs.portal.services.feedback.beans.FeedbackValidator"/>
+		</property>
+
+  		<property name="mailSender"><ref bean="mailSender"/></property>
+  		<property name="messageFormatter"><ref bean="messageFormatter"/></property>
+  		
+  	</bean>
+  	
+</beans>

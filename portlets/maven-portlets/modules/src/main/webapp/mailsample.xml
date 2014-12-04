@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns='http://www.ietf.org/rfc/rfc2060.txt#'>
+  <Mailbox rdf:about='imap://brharp@staff.mail.uoguelph.ca/INBOX'>
+    <name>INBOX</name>
+    <exists>2634</exists>
+    <recent>0</recent>
+    <unseen>3</unseen>
+    <messages>
+      <rdf:Seq>
+        <rdf:li rdf:resource='imap://brharp@staff.mail.uoguelph.ca/INBOX#2625'/>
+        <rdf:li rdf:resource='imap://brharp@staff.mail.uoguelph.ca/INBOX#2626'/>
+        <rdf:li rdf:resource='imap://brharp@staff.mail.uoguelph.ca/INBOX#2627'/>
+        <rdf:li rdf:resource='imap://brharp@staff.mail.uoguelph.ca/INBOX#2628'/>
+        <rdf:li rdf:resource='imap://brharp@staff.mail.uoguelph.ca/INBOX#2629'/>
+        <rdf:li rdf:resource='imap://brharp@staff.mail.uoguelph.ca/INBOX#2630'/>
+        <rdf:li rdf:resource='imap://brharp@staff.mail.uoguelph.ca/INBOX#2631'/>
+        <rdf:li rdf:resource='imap://brharp@staff.mail.uoguelph.ca/INBOX#2632'/>
+        <rdf:li rdf:resource='imap://brharp@staff.mail.uoguelph.ca/INBOX#2633'/>
+        <rdf:li rdf:resource='imap://brharp@staff.mail.uoguelph.ca/INBOX#2634'/>
+      </rdf:Seq>
+    </messages>
+  </Mailbox>
+  <Message rdf:about='imap://brharp@staff.mail.uoguelph.ca/INBOX#2625'>
+    <envelope>
+      <Envelope xmlns='http://www.ietf.org/rfc/rcf2822.txt#'>
+        <subject>You have received a new voicemail message</subject>
+        <from>15193414182@vm.vonage.ca</from>
+        <date>Mon, 02 Apr 2007 18:56:50 -0400</date>
+      </Envelope>
+    </envelope>
+    <flag>\Seen</flag>
+  </Message>
+  <Message rdf:about='imap://brharp@staff.mail.uoguelph.ca/INBOX#2626'>
+    <envelope>
+      <Envelope xmlns='http://www.ietf.org/rfc/rcf2822.txt#'>
+        <subject>Silicon Knights Reminder!</subject>
+        <from>clarkd@uoguelph.ca</from>
+        <date>Mon, 02 Apr 2007 20:11:04 -0400</date>
+      </Envelope>
+    </envelope>
+    <flag>\Seen</flag>
+  </Message>
+  <Message rdf:about='imap://brharp@staff.mail.uoguelph.ca/INBOX#2627'>
+    <envelope>
+      <Envelope xmlns='http://www.ietf.org/rfc/rcf2822.txt#'>
+        <subject>[ANNOUNCE] GNUmed 0.2.5 release</subject>
+        <from>Sebastian Hilbert &lt;sebastian.hilbert@gmx.net&gt;</from>
+        <date>Mon, 02 Apr 2007 20:41:05 -0400</date>
+      </Envelope>
+    </envelope>
+    <flag>\Deleted</flag>
+    <flag>\Seen</flag>
+  </Message>
+  <Message rdf:about='imap://brharp@staff.mail.uoguelph.ca/INBOX#2628'>
+    <envelope>
+      <Envelope xmlns='http://www.ietf.org/rfc/rcf2822.txt#'>
+        <subject>Where's Barbara</subject>
+        <from>Barbara Edwards &lt;edwards@uoguelph.ca&gt;</from>
+        <date>Tue, 03 Apr 2007 07:56:39 -0400</date>
+      </Envelope>
+    </envelope>
+    <flag>\Seen</flag>
+  </Message>
+  <Message rdf:about='imap://brharp@staff.mail.uoguelph.ca/INBOX#2629'>
+    <envelope>
+      <Envelope xmlns='http://www.ietf.org/rfc/rcf2822.txt#'>
+        <subject>Re: Where's Gerrit</subject>
+        <from>Gerrit Bos &lt;gbos@uoguelph.ca&gt;</from>
+        <date>Tue, 03 Apr 2007 08:41:52 -0400</date>
+      </Envelope>
+    </envelope>
+    <flag>\Seen</flag>
+  </Message>
+  <Message rdf:about='imap://brharp@staff.mail.uoguelph.ca/INBOX#2630'>
+    <envelope>
+      <Envelope xmlns='http://www.ietf.org/rfc/rcf2822.txt#'>
+        <subject>Re: Gaussian-Jordan Elimination and FPGAs</subject>
+        <from>Gary Grewal &lt;gwg@cis.uoguelph.ca&gt;</from>
+        <date>Tue, 03 Apr 2007 08:51:35 -0400</date>
+      </Envelope>
+    </envelope>
+    <flag>\Seen</flag>
+  </Message>
+  <Message rdf:about='imap://brharp@staff.mail.uoguelph.ca/INBOX#2631'>
+    <envelope>
+      <Envelope xmlns='http://www.ietf.org/rfc/rcf2822.txt#'>
+        <subject>iassist web application</subject>
+        <from>Brent Harp &lt;brharp@uoguelph.ca&gt;</from>
+        <date>Tue, 03 Apr 2007 09:47:00 -0400</date>
+      </Envelope>
+    </envelope>
+  </Message>
+  <Message rdf:about='imap://brharp@staff.mail.uoguelph.ca/INBOX#2632'>
+    <envelope>
+      <Envelope xmlns='http://www.ietf.org/rfc/rcf2822.txt#'>
+        <subject>RE: File to deploy on QA</subject>
+        <from>Barbara Edwards &lt;edwards@uoguelph.ca&gt;</from>
+        <date>Tue, 03 Apr 2007 09:47:16 -0400</date>
+      </Envelope>
+    </envelope>
+    <flag>\Flagged</flag>
+    <flag>\Seen</flag>
+  </Message>
+  <Message rdf:about='imap://brharp@staff.mail.uoguelph.ca/INBOX#2633'>
+    <envelope>
+      <Envelope xmlns='http://www.ietf.org/rfc/rcf2822.txt#'>
+        <subject>You have received a new voicemail message</subject>
+        <from>15193414182@vm.vonage.ca</from>
+        <date>Tue, 03 Apr 2007 09:56:48 -0400</date>
+      </Envelope>
+    </envelope>
+  </Message>
+  <Message rdf:about='imap://brharp@staff.mail.uoguelph.ca/INBOX#2634'>
+    <envelope>
+      <Envelope xmlns='http://www.ietf.org/rfc/rcf2822.txt#'>
+        <subject>FW: Books for Africa Book Drive</subject>
+        <from>Edna Mumford &lt;edna@cis.uoguelph.ca&gt;</from>
+        <date>Tue, 03 Apr 2007 10:33:28 -0400</date>
+      </Envelope>
+    </envelope>
+  </Message>
+</rdf:RDF>

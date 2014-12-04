@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <title>PrefTest</title>
+  <pref><name>first</name><type>string</type><default></default></pref>
+  <pref><name>second</name><type>string</type><default></default></pref>
+  <pref><name>third</name><type>string</type><default></default></pref>
+  <pref><name>fourth</name><type>string</type><default></default></pref>
+  <pref><name>fifth</name><type>string</type><default></default></pref>
+  <pref><name>sixth</name><type>string</type><default></default></pref>
+  <pref><name>seventh</name><type>string</type><default></default></pref>
+  <pref><name>date</name><type>date</type><default></default></pref>
+  <content>
+    This is the preference test.
+  </content>
+</module>
+

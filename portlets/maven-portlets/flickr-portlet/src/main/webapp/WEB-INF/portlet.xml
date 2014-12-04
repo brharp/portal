@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app 
+    xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd 
+                        /opt/SUNWportal/dtd/portlet.xsd"
+    version="1.0">
+
+<portlet>
+    <portlet-name>FlickrPortlet</portlet-name>
+    <portlet-class>ca.uoguelph.ccs.portal.portlets.photo.FlickrPortlet</portlet-class>
+    <expiration-cache>30</expiration-cache>
+    <supports>
+	<mime-type>text/html</mime-type>
+	<portlet-mode>edit</portlet-mode>
+	<portlet-mode>help</portlet-mode>
+    </supports>
+    <supported-locale>en_US</supported-locale>
+    <portlet-info>
+	<title>Flickr Portlet</title>
+	<short-title>Flickr</short-title>
+	<keywords>Flickr, photo, image, picture</keywords>
+    </portlet-info> 
+  </portlet>  
+</portlet-app>

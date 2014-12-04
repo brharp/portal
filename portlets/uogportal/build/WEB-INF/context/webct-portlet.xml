@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "../../dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="webCtHomeController"
+        class="ca.uoguelph.ccs.portal.webct.WebCtHomeController">
+    <property name="webCtService"><ref bean="webCtService"/></property>
+  </bean>
+
+  <bean id="webCtSsoController"
+        class="ca.uoguelph.ccs.portal.webct.WebCtSsoController">
+    <property name="webCtService"><ref bean="webCtService"/></property>
+  </bean>
+
+  <bean id="portletModeParameterHandlerMapping"
+        class="org.springframework.web.portlet.handler.PortletModeParameterHandlerMapping">
+    <property name="order" value="10"/>
+    <property name="portletModeParameterMap">
+      <map>
+        <entry key="view">
+          <map>
+            <entry key="autoSignon"><ref bean="webCtSsoController"/></entry>
+          </map>
+        </entry>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="portletModeHandlerMapping" 
+        class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
+    <property name="order" value="20"/>
+    <property name="portletModeMap">
+      <map>
+        <entry key="view"><ref bean="webCtHomeController"/></entry>
+      </map>
+    </property>
+  </bean>
+
+  <!-- Exceptions Handler -->
+
+  <bean id="defaultExceptionHandler" 
+        class="org.springframework.web.portlet.handler.SimpleMappingExceptionResolver">
+    <property name="defaultErrorView" value="webct/defError"/>
+  </bean>
+
+</beans>

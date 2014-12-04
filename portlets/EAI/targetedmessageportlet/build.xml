@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project default="war" name="cms" basedir=".">
+  <property file="../../common.properties"/>
+  <property file="build.properties"/>
+
+  <property name="src.dir" value="src"/>
+  <property name="build.dir" value="build"/>
+  <property name="dist.dir" value="dist"/>
+  <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="uportal.classes.dir" value="C:/eclipse/workspace/uPortal242/uPortal_rel-2-4-2\build/WEB-INF/classes"/>  	
+  <property name="lib.dir" value="lib"/>
+  <property name="web-inf.dir" value="WEB-INF"/>
+  <property name="mule.home" value="C:/mule-1.1-rc1"/>
+  
+  <target name="init">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${classes.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <mkdir dir="${lib.dir}"/>
+  </target>
+
+  <target name="compile" depends="init">
+    <javac destdir="${classes.dir}" deprecation="true" debug="true" optimize="false">
+      <src>
+        <pathelement location="${src.dir}"/>
+      </src>
+   	 <classpath path="${uportal.classes.dir}"/>    	
+      <classpath>
+        <pathelement location="${servlet.lib}"/>
+	  <pathelement path="${java.class.path}"/>
+
+        <fileset dir="${lib.dir}">
+          <include name="*.jar">
+          </include>
+        </fileset>
+
+        <fileset dir="${tomcat.shared.lib.dir}">
+          <include name="*.jar">
+          </include>
+        </fileset>
+
+
+	<fileset dir="${mule.home}/lib">
+      	<include name="*.jar"/>
+	</fileset>
+
+    <fileset dir="${mule.home}/lib/mule-extras-spring">
+      <include name="*.jar"/>
+    </fileset>
+
+<!--
+    <fileset dir="lib">
+      <include name="*.jar"/>
+    </fileset>
+-->
+<!-- added -->
+    <fileset dir="${mule.home}/dist">
+      <include name="*.jar"/>
+    </fileset>        
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="war" depends="compile">
+    <war destfile="${dist.dir}/${war.name}.war" webxml="WEB-INF/web.xml">
+        <classes dir="${classes.dir}"/>
+        <lib dir="${lib.dir}"/>
+        <webinf dir="${web-inf.dir}"/>
+    </war>
+  </target>
+  <target name="clean">
+    <delete dir="${build.dir}">
+    </delete>
+    <delete dir="${dist,dir}">
+    </delete>
+  </target>
+</project>
+
+
+
+

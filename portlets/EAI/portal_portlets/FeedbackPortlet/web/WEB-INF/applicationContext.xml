@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host"><value>outbound.mail.uoguelph.ca</value></property>
+		<property name="port"><value>25</value></property>
+	</bean>
+  
+  	<bean id="messageFormatter" class="edu.wisc.my.portlets.feedback.dao.ClarifyFeedbackMessageFormatterImpl">
+  		<property name="targetEmail"><value>ljairath@uoguelph.ca</value></property>
+  		<property name="fromAddress"><value>ljairath@uoguelph.ca</value></property>
+  	</bean>
+  	
+</beans>

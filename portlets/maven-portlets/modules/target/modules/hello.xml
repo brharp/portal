@@ -1,0 +1,12 @@
+<module>
+  <title>Hello</title>
+  <pref><name>name</name><type>string</type><default>World</default></pref>
+  <pref><name>bgcolor</name><type>string</type><default>#FFF</default></pref>
+  <content>
+    <![CDATA[
+             <div style='background:%MODULE_PREF_VALUE_bgcolor%'>
+             Hello, %MODULE_PREF_VALUE_name%!
+             </div>
+    ]]>
+  </content>
+</module>

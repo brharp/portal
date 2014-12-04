@@ -1,0 +1,15 @@
+<html>
+<body onload='document.forms[0].submit()'>
+<form action='/portal/ws/cognos' method='post'>
+  <input type='hidden' name='CAMNamespace' value='CentralLDAP'/>
+  <input type='hidden' name='CAMNamespaceDisplayName' value='UofG_LDAP'/>
+  <input type='hidden' name='CAMUsername' value='@username@'/>
+  <input type='hidden' name='CAMPassword' value='@password@'/>
+  <input type='hidden' name='h_CAM_action' value='logonAs'/>
+  <input type='hidden' name='encoding' value='UTF-8'/>
+  <input type='hidden' name='m' value='portal/main.xts'/>
+  <input type='hidden' name='b_action' value='xts.run'/>
+  <input type='hidden' name='startwel' value='yes'/>
+</form>
+</body>
+</html>

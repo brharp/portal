@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="module.xsl"?> 
+<module>
+  <title>TestScoring</title>
+  <author>
+    Academic Services - Computing and Communications Services - v:
+    March 7, 2007
+  </author>
+  <description>
+    The TestScoring channel in MyPortico displays the person's most
+    recent Scanner Files or Test Scoring datasets.  Clicking on any
+    file/dataset in the display takes the person directly to the
+    relevant menu in the CCS Online TestScoring System. As with most
+    MyPortico channels, user's may customize the TestScoring channel
+    by clicking on its Edit button.
+  </description>
+  <help>
+    Help file is currently under development
+  </help>
+  <attr><name>username</name><alias>username</alias></attr>
+  <attr><name>lastName</name><alias>lastName</alias></attr>
+  <pref>
+    <name>show</name>
+    <type>select</type>
+    <option value="S">Scanner Files</option>
+    <option value="D">Test Scoring Datasets</option>
+    <default>S</default>
+  </pref>
+  <content>
+    <![CDATA[
+    <script type="text/javascript">
+
+      function %MODULE_ID%_onload() 
+      {
+        %MODULE_ID%_refresh();
+      }
+      
+      function %MODULE_ID%_refresh()
+      {
+        var params = {
+          _service: 'pool_1',
+          _program: 'tscorep.testrss.sas',
+             drill: 'Y',
+              show: '%MODULE_PREF_VALUE_show%',
+          lastname: '%MODULE_ATTR_VALUE_lastName%',
+            userid: '@username@',
+          password: '@password@'
+        };
+
+        new Ajax.Updater('%MODULE_ID%.content', '/portal/ws/sas', {
+          method: 'get',
+          parameters: $H(params).toQueryString()
+        });
+      }
+
+    </script>
+
+    <div id="%MODULE_ID%.content">
+    </div>
+
+    <a href="javascript:%MODULE_ID%_refresh()">Refresh</a>
+    ]]>
+  </content>
+</module>

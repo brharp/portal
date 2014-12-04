@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    version="1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+
+    <portlet>
+        <description xml:lang="en">DatabaseStatsReporter</description>
+        <portlet-name>DatabaseStatsReporter</portlet-name>
+        <display-name xml:lang="en">Database Stats Reporter</display-name>
+        <portlet-class>ca.uoguelph.ccs.portal.portlets.databasestatsreporterportlet.DatabaseStatsReporterPortlet</portlet-class>
+        <expiration-cache>60</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+        </supports>
+        <supported-locale>en</supported-locale>
+        <portlet-info>
+            <title>DatabaseStatsReporter</title>
+            <short-title>DbStats</short-title>
+            <keywords>portlet, database, stats, statistics, report, reporter</keywords>
+        </portlet-info>
+    </portlet>
+
+    <user-attribute>  
+		<description>The username used to log in with.</description>
+		<name>username</name>				
+    </user-attribute>
+    <user-attribute>  
+		<description>The class level of the student.</description>
+		<name>classLevel</name>				
+    </user-attribute>
+    <user-attribute>  
+		<description></description>
+		<name>displayName</name>				
+    </user-attribute>
+    <user-attribute>  
+		<description>User's first name.</description>
+		<name>firstName</name>				
+    </user-attribute>
+    <user-attribute>  
+		<description>User's last name.</description>
+		<name>lastName</name>				
+    </user-attribute>
+    <user-attribute>  
+		<description>User's template name</description>
+		<name>uPortalTemplateUserName</name>				
+    </user-attribute>
+    
+</portlet-app>

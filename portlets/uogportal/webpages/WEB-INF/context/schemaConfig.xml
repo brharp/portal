@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING/DTD BEAN//EN" "../dtd/spring-beans.dtd">
+
+<beans>
+  
+  <!--
+      Data Source
+      
+      UofG Portal Application data source.
+  -->
+
+  <bean id="dataSource"
+        class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName">
+      <value>java:comp/env/jdbc/uogportal</value>
+    </property>
+  </bean>
+
+  
+  <!--
+      Source Schema
+  -->
+
+  <bean id="sourceSchema"
+        class="ca.uoguelph.ccs.db.schema.jdbc.JDBCSchemaReader">
+    <property name="dataSource"><ref bean="dataSource"/></property>
+  </bean>
+
+
+  <!--
+      Target Schema
+  -->
+
+  <bean id="targetSchema"
+        class="ca.uoguelph.ccs.db.schema.xml.XMLSchemaReader">
+    <property name="uri">
+      <value>${webapp.root}/WEB-INF/schema.xml</value>
+    </property>
+  </bean>
+
+  
+  <!--
+      Query Processor
+  -->
+
+  <bean id="queryProcessor"
+        class="ca.uoguelph.ccs.db.query.jdbc.JDBCQueryProcessor">
+    <property name="dataSource"><ref bean="dataSource"/></property>
+  </bean>
+
+</beans>
+      

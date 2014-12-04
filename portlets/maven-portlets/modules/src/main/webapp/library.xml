@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="module.xsl"?>
+<module>
+  <title>Library</title>
+  <author></author>
+  <description>
+    View your library account.
+  </description>
+  <attr>
+    <name>username</name>
+    <alias>username</alias>
+  </attr>
+  <attr>
+    <name>commonName</name>
+    <alias>commonName</alias>
+  </attr>
+  <attr>
+    <name>departmentName</name>
+    <alias>departmentName</alias>
+  </attr>
+  <attr>
+    <name>mail</name>
+    <alias>mail</alias>
+  </attr>
+  <attr>
+    <name>displayName</name>
+    <alias>displayName</alias>
+  </attr>
+  <attr>
+    <name>firstName</name>
+    <alias>firstName</alias>
+  </attr>
+  <attr>
+    <name>program</name>
+    <alias>program</alias>
+  </attr>
+  <attr>
+    <name>programDept</name>
+    <alias>programDept</alias>
+  </attr>
+  <attr>
+    <name>programMajor</name>
+    <alias>programMajor</alias>
+  </attr>
+  <attr>
+    <name>lastName</name>
+    <alias>lastName</alias>
+  </attr>
+  <attr>
+    <name>studentId</name>
+    <alias>studentId</alias>
+  </attr>
+  <attr>
+    <name>employeeId</name>
+    <alias>employeeId</alias>
+  </attr>
+  <content src='http://www.lib.uoguelph.ca/portal/myAccount.cfm'/>
+</module>

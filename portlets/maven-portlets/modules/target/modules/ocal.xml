@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="module.xsl"?>
+<module>
+  <title>OracleCalendar</title>
+  <author>MyPortico</author>
+  <description>
+    Preview your Oracle Calendar agenda.
+  </description>
+  <pref>
+    <name>username</name>
+    <type>string</type>
+    <default></default>
+  </pref>
+  <pref>
+    <name>password</name>
+    <type>password</type>
+    <default></default>
+  </pref>
+  <pref>
+    <name>ndays</name>
+    <type>select</type>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+    <option>6</option>
+    <option>7</option>
+    <default>3</default>
+  </pref>
+  <attr>
+    <name>lastName</name>
+    <alias>lastName</alias>
+  </attr>
+  <attr>
+    <name>firstName</name>
+    <alias>firstName</alias>
+  </attr>
+  <content>
+    <![CDATA[
+    <script>
+
+// This code was written by Tyler Akins and has been placed in the
+// public domain.  It would be nice if you left this header intact.
+// Base64 code from Tyler Akins -- http://rumkin.com
+
+var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+function encode64(input) {
+   var output = "";
+   var chr1, chr2, chr3;
+   var enc1, enc2, enc3, enc4;
+   var i = 0;
+
+   do {
+      chr1 = input.charCodeAt(i++);
+      chr2 = input.charCodeAt(i++);
+      chr3 = input.charCodeAt(i++);
+
+      enc1 = chr1 >> 2;
+      enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+      enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+      enc4 = chr3 & 63;
+
+      if (isNaN(chr2)) {
+         enc3 = enc4 = 64;
+      } else if (isNaN(chr3)) {
+         enc4 = 64;
+      }
+
+      output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) + 
+         keyStr.charAt(enc3) + keyStr.charAt(enc4);
+   } while (i < input.length);
+   
+   return output;
+}
+
+function decode64(input) {
+   var output = "";
+   var chr1, chr2, chr3;
+   var enc1, enc2, enc3, enc4;
+   var i = 0;
+
+   // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+   input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+   do {
+      enc1 = keyStr.indexOf(input.charAt(i++));
+      enc2 = keyStr.indexOf(input.charAt(i++));
+      enc3 = keyStr.indexOf(input.charAt(i++));
+      enc4 = keyStr.indexOf(input.charAt(i++));
+
+      chr1 = (enc1 << 2) | (enc2 >> 4);
+      chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+      chr3 = ((enc3 & 3) << 6) | enc4;
+
+      output = output + String.fromCharCode(chr1);
+
+      if (enc3 != 64) {
+         output = output + String.fromCharCode(chr2);
+      }
+      if (enc4 != 64) {
+         output = output + String.fromCharCode(chr3);
+      }
+   } while (i < input.length);
+
+   return output;
+}
+
+      var %MODULE_ID%_MONTHS = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      ];
+
+      var %MODULE_ID%_DAYS_OF_WEEK = [
+        "Sunday", "Monday", "Tuesday", "Wednesday", 
+        "Thursday", "Friday", "Saturday"
+      ];
+
+      var %MODULE_ID%_ONE_DAY = 86400000;
+
+      var %MODULE_ID%_TODAY = new Date();
+
+      function %MODULE_ID%_toICalDateString()
+      {
+        var year = this.getFullYear();
+        var month = this.getMonth() + 1;
+        var date = this.getDate();
+
+        return year.toString() + (month < 10 ? "0" : "") +
+               month.toString() + (date < 10 ? "0" : "") +
+               date.toString();
+      }     
+
+      function %MODULE_ID%_calendar()
+      {
+        var d = new Date();
+
+        d.setFullYear(%MODULE_ID%_TODAY.getFullYear());
+        d.setMonth(%MODULE_ID%_TODAY.getMonth());
+        d.setDate(%MODULE_ID%_TODAY.getDate());
+
+        document.writeln("<table>");
+
+        document.writeln("<tr><th colspan='7'>");
+        document.writeln(%MODULE_ID%_MONTHS[d.getMonth()]);
+        document.writeln(d.getFullYear().toString());
+        document.writeln("</th></tr>");
+
+        // Rewind to first Sunday of the month.
+        d.setDate(1);
+        while (d.getDay() != 0) {
+          d.setTime(d.getTime() - %MODULE_ID%_ONE_DAY);
+        }
+
+        // Draw calendar.
+        document.writeln("<tr>");
+        document.writeln("<td>Su</td>");
+        document.writeln("<td>Mo</td>");
+        document.writeln("<td>Tu</td>");
+        document.writeln("<td>We</td>");
+        document.writeln("<td>Th</td>");
+        document.writeln("<td>Fr</td>");
+        document.writeln("<td>Sa</td>");
+        document.writeln("</tr>");
+        for (var w = 0; w < 6; w++) {
+          document.writeln("<tr>");
+          for (var j = 0; j < 7; j++) {
+            document.writeln("<td align='right'>");
+            if (%MODULE_ID%_TODAY.getMonth() == d.getMonth()) {
+              if (%MODULE_ID%_TODAY.getDate() == d.getDate()) {
+                document.writeln(d.getDate().toString().bold());
+              } else {
+                document.writeln(d.getDate().toString());
+              }
+            }
+            document.writeln("</td>");
+            d.setTime(d.getTime() + %MODULE_ID%_ONE_DAY);
+          }
+          document.writeln("</tr>");
+        }
+        document.writeln("</table>");
+
+        document.writeln("<br/>");
+
+        // Reset d to today.
+        d.setFullYear(%MODULE_ID%_TODAY.getFullYear());
+        d.setMonth(%MODULE_ID%_TODAY.getMonth());
+        d.setDate(%MODULE_ID%_TODAY.getDate());
+
+        var ndays = %MODULE_PREF_VALUE_ndays%;
+        for (var i = 0; i < ndays; i++) {
+          var date = %MODULE_ID%_toICalDateString.apply(d);
+          document.writeln("<b id='%MODULE_ID%_day_"+date+"'></b>\n");
+          document.writeln("<ul id='%MODULE_ID%_events_"+date+"'/></ul>\n");
+          d.setTime(d.getTime() + %MODULE_ID%_ONE_DAY);
+        }
+      }
+      
+      function %MODULE_ID%_update(r)
+      {
+        if (r.readyState == 4 && r.status == 200) {
+          var iCalendar = r.responseXML;
+          var vevent = iCalendar.getElementsByTagName('vevent');
+          var d = new Date();
+          d.setFullYear(%MODULE_ID%_TODAY.getFullYear());
+          d.setMonth(%MODULE_ID%_TODAY.getMonth());
+          d.setDate(%MODULE_ID%_TODAY.getDate());
+          var ndays = %MODULE_PREF_VALUE_ndays%;
+          for (var i = 0; i < ndays; i++) {
+            var date = %MODULE_ID%_toICalDateString.apply(d);
+            var dayTitle = $('%MODULE_ID%_day_'+date);
+            var eventList = $('%MODULE_ID%_events_'+date);
+            dayTitle.appendChild(document.createTextNode
+              (i == 0 ? "Today" : i == 1 ? "Tommorrow" :
+               %MODULE_ID%_DAYS_OF_WEEK[d.getDay()]));
+            for (var j = 0; j < vevent.length; j++) {
+              var dtstart = vevent[j]
+                .getElementsByTagName('dtstart')[0]
+                  .firstChild.nodeValue;
+              var summary = vevent[j]
+                .getElementsByTagName('summary')[0]
+                  .firstChild.nodeValue;
+              if (dtstart.indexOf(date) == 0) {
+                var li = document.createElement('li');
+                li.setAttribute('style',
+                  'list-style-image:url(%MODULE_CONTEXT%images/cal.png)');
+                li.appendChild(document.createTextNode(summary));
+                eventList.appendChild(li);
+              }
+            }
+            if (!eventList.hasChildNodes()) {
+              var li = document.createElement('li');
+              var it = document.createElement('i');
+              var text = document.createTextNode("No events scheduled.");
+              it.appendChild(text);
+              li.appendChild(it);
+              eventList.appendChild(li);
+            }
+            d.setTime(d.getTime() + %MODULE_ID%_ONE_DAY);
+          }
+        }
+      }
+
+      function %MODULE_ID%_refresh()
+      {
+        var username = '%MODULE_PREF_VALUE_username%';
+        var password = '%MODULE_PREF_VALUE_password%';
+        var firstLast = username.match(/(\S+)\s+(.+)/);
+        var firstName = firstLast[1];
+        var lastName = firstLast[2];
+
+        var query = $H({
+              S: lastName,
+              G: firstName,
+            end: '+P%MODULE_PREF_VALUE_ndays%D' 
+        }).toQueryString();
+
+        var r = Ajax.getTransport();
+        r.onreadystatechange = function(){%MODULE_ID%_update(r)};
+        r.open('GET', '/atomcal/.xcs?'+query, true);
+        r.setRequestHeader(
+          'Authorization',
+          'BASIC '+encode64(username+':'+password)
+        );
+        r.send(query);
+      }
+
+      function %MODULE_ID%_onload() {
+        %MODULE_ID%_refresh();
+      }
+
+      %MODULE_ID%_calendar();
+
+    </script>
+
+    ]]>
+  </content>
+</module>

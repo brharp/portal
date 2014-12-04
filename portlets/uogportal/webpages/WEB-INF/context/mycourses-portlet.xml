@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "../../dtd/spring-beans.dtd">
+<beans>
+
+  <bean id="myCoursesController" 
+        class="ca.uoguelph.ccs.portal.mycourses.MyCoursesController">
+    <property name="courseService"><ref bean="courseService"/></property>
+  </bean>
+
+  <bean id="notificationSendController"
+        class="ca.uoguelph.ccs.portal.portlets.notification.bus.NotificationEditController">
+    <property name="notificationDao"><ref bean="targettedNotificationDAO"></ref></property>
+  </bean>
+  
+  <bean id="abstractResourceController" abstract="true">
+    <property name="resourceDao"><ref bean="resourceDao"/></property>
+  </bean>
+  
+  <bean id="resourcesViewController"
+        class="ca.uoguelph.ccs.portal.mycourses.ResourcesViewController"
+        parent="abstractResourceController">
+  </bean>
+
+  <!--
+      Controller to edit a list of course resources.
+  -->
+  <bean id="resourcesEditController"
+        class="ca.uoguelph.ccs.portal.mycourses.ResourcesEditController"
+        parent="abstractResourceController">
+  </bean>
+
+  <!--
+      Branches to one of the resource type specific resource editing
+      controllers (for URL resources, ISBN resources, etc). Currently
+      the list of resource type options is encoded directly in the
+      view as links, ideally the list of available resource types
+      would be provided by the controller for enumeration by the view.
+  -->
+  <bean id="resourceAddController"
+        class="org.springframework.web.portlet.mvc.ParameterizableViewController">
+    <property name="viewName" value="mycourses/resourceAdd"/>
+  </bean>
+
+  <!--
+      Controls editing of a simple URL resource.
+  -->
+  <bean id="urlResourceEditController"
+        class="ca.uoguelph.ccs.portal.mycourses.ResourceEditController"
+        parent="abstractResourceController">
+    <property name="formView" value="mycourses/urlResourceEdit"/>
+    <property name="commandClass" value="ca.uoguelph.ccs.portal.mycourses.UrlResource"/>
+  </bean>
+
+  <!--
+      Controls editing of an ISBN reference resource.
+  -->
+  <bean id="isbnResourceEditController"
+        class="ca.uoguelph.ccs.portal.mycourses.ResourceEditController"
+        parent="abstractResourceController">
+    <property name="formView" value="mycourses/isbnResourceEdit"/>
+    <property name="commandClass" value="ca.uoguelph.ccs.portal.mycourses.IsbnResource"/>
+  </bean>
+
+  <bean id="resourceDeleteController"
+        class="ca.uoguelph.ccs.portal.mycourses.ResourceDeleteController"
+        parent="abstractResourceController">
+  </bean>
+
+  <bean id="abstractDelegateController" abstract="true">
+    <property name="delegateDao"><ref bean="delegateDao"/></property>
+  </bean>
+
+  <bean id="delegatesEditController"
+        class="ca.uoguelph.ccs.portal.mycourses.DelegatesEditController"
+        parent="abstractDelegateController">
+  </bean>
+
+  <bean id="delegateEditController"
+        class="ca.uoguelph.ccs.portal.mycourses.DelegateEditController"
+        parent="abstractDelegateController">
+  </bean>
+
+  <bean id="delegateDeleteController"
+        class="ca.uoguelph.ccs.portal.mycourses.DelegateDeleteController"
+        parent="abstractDelegateController">
+  </bean>
+
+  <!-- Handler Mapping -->
+
+  <bean id="parameterMappingInterceptor" class="org.springframework.web.portlet.handler.ParameterMappingInterceptor"/>
+
+  <bean id="portletModeParameterHandlerMapping"
+        class="org.springframework.web.portlet.handler.PortletModeParameterHandlerMapping">
+    <property name="order" value="10"/>
+    <property name="interceptors">
+      <list>
+        <ref bean="parameterMappingInterceptor"/>
+      </list>
+    </property>
+    <property name="portletModeParameterMap">
+      <map>
+        <entry key="view">
+          <map>
+            <entry key="sendNotification"><ref bean="notificationSendController"/></entry>
+            <entry key="editNotification"><ref bean="notificationSendController"/></entry>
+            <entry key="viewResources"><ref bean="resourcesViewController"/></entry>
+            <entry key="editResources"><ref bean="resourcesEditController"/></entry>
+            <entry key="addResource"><ref bean="resourceAddController"/></entry>
+            <entry key="editUrlResource"><ref bean="urlResourceEditController"/></entry>
+            <entry key="editIsbnResource"><ref bean="isbnResourceEditController"/></entry>
+            <entry key="deleteResource"><ref bean="resourceDeleteController"/></entry>
+            <entry key="editDelegates"><ref bean="delegatesEditController"/></entry>
+            <entry key="addDelegate"><ref bean="delegateEditController"/></entry>
+            <entry key="deleteDelegate"><ref bean="delegateDeleteController"/></entry>
+          </map>
+        </entry>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="portletModeHandlerMapping" 
+        class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
+    <property name="order" value="20"/>
+    <property name="portletModeMap">
+      <map>
+        <entry key="view"><ref bean="myCoursesController"/></entry>
+      </map>
+    </property>
+  </bean>
+
+  <!-- Exceptions Handler -->
+
+  <bean id="defaultExceptionHandler" parent="defaultExceptionHandlerTemplate"/>
+
+</beans>

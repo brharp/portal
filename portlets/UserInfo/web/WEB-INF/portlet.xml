@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
+                                 http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+             version="1.0">
+
+  <portlet>
+    <portlet-name>mode</portlet-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>/WEB-INF/context/portlet/mode.xml</value>
+    </init-param>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+      <portlet-mode>edit</portlet-mode>
+      <portlet-mode>help</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Mode Name View</title>
+    </portlet-info>      
+  </portlet>
+
+  <portlet>
+    <portlet-name>exceptions</portlet-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>/WEB-INF/context/portlet/exceptions.xml</value>
+    </init-param>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+      <portlet-mode>edit</portlet-mode>
+      <portlet-mode>help</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Test Exceptions</title>
+    </portlet-info>      
+  </portlet>
+
+  <portlet>
+    <portlet-name>UserInfo</portlet-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>/WEB-INF/context/portlet/UserInfo.xml</value>
+    </init-param>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>UserInfo</title>
+    </portlet-info>      
+  </portlet>
+
+  <user-attribute>
+    <name>user.login.id</name>
+  </user-attribute>
+  <user-attribute>
+    <name>user.name</name>
+  </user-attribute>
+  <user-attribute>
+    <name>user.name.full</name>
+  </user-attribute>
+  <user-attribute>
+    <name>lastName</name>
+  </user-attribute>
+  
+</portlet-app>

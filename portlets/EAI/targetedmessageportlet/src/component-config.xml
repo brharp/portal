@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE beans PUBLIC "http://www.springframework.org/dtd/spring-beans.dtd" "C:\Documents and Settings\NL24167\workspace\Diabolo-OSS\config\dtd\spring-beans.dtd">				
+<beans>
+
+    <bean id="logger" class="mule.examples.mailintegration.components.SimpleLogger"/>
+
+	<!-- this is just to simplify testing, the good way would be to 
+	     register this in a jndi context. -->
+    <bean id="activeMqConnectionFactory" class="org.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="vm://localhost:62001"/>
+        <!-- More properties you want set on ActiveMQConnectionFactory -->
+    </bean>
+
+</beans>
+

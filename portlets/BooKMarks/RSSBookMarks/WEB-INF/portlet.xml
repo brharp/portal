@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" version="1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
+http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+<portlet>
+    <portlet-name>RSSBookmarksPortlet</portlet-name>
+    <portlet-class>com.plumtree.portlet.portlets.RSSBookmarksPortlet</portlet-class>
+    <init-param>
+      <name>url</name>
+      <value>http://www.theserverside.com/rss/theserverside-0.9.rdf</value>
+    </init-param>    
+        <expiration-cache>30</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>edit</portlet-mode>
+      <portlet-mode>help</portlet-mode>
+    </supports>
+    <supported-locale>en-US</supported-locale>
+
+     <portlet-info>
+      <title>RSS Bookmarks Portlet</title>
+      <short-title>RSS</short-title>
+      <keywords>RSS</keywords>
+    </portlet-info> 
+    <portlet-preferences>
+      <preference>
+        <name>RssXml</name>
+        <value>The Server Side http://www.theserverside.com/rss/theserverside-0.9.rdf</value>
+        <value>rss com  http://rss.com.com/2547-12-0-20.xml</value>
+        <value>Headlines http://headlines.internet.com/internetnews/top-news/news.rss</value>
+ 	    <value>Headlines Internethttp://headlines.internet.com/internetnews/fina-news/news.rss</value> 
+   		<value>Science Daily http://www.sciencedaily.com/newsfeed.xml</value>    
+      </preference>
+    </portlet-preferences>
+  </portlet>
+ 
+</portlet-app>

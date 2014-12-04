@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "../../dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="calendarService"
+        class="ca.uoguelph.ccs.portal.calendar.CalendarService">
+    <property name="calendarDao"><ref bean="calendarDao"/></property>
+    <property name="eventDao"><ref bean="eventDao"/></property>
+    <property name="calendarEventDao"><ref bean="calendarEventDao"/></property>
+  </bean>
+
+  <bean id="calendarDao"
+        class="ca.uoguelph.ccs.portal.calendar.academus.AcademusCalendarDao">
+    <property name="dataSource"><ref bean="dataSource"/></property>
+  </bean>
+
+  <bean id="eventDao"
+        class="ca.uoguelph.ccs.portal.calendar.academus.AcademusEventDao">
+    <property name="dataSource"><ref bean="dataSource"/></property>
+  </bean>
+
+  <bean id="calendarEventDao"
+        class="ca.uoguelph.ccs.portal.calendar.academus.AcademusCalendarEventDao">
+    <property name="dataSource"><ref bean="dataSource"/></property>
+  </bean>
+
+</beans>

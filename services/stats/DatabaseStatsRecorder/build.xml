@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project default="war" name="databasestatsrecorder" basedir=".">
+  <property file="build.properties"/>
+  <property name="src.dir" value="src"/>
+  <property name="build.dir" value="build"/>
+  <property name="dist.dir" value="dist"/>
+<!--  <property name="dist.dir" value="C:/eclipse/workspace/uPortal242/uPortal_rel-2-4-2/lib/portlets"/> -->
+  <property name="tomcat.shared.lib.dir" value="C:/portal/unicon/Academus/portal-tomcat-a/shared/lib"/>	
+  <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="lib.dir" value="C:/portal/unicon/Academus/portal-tomcat-a/webapps/portal/WEB-INF/lib"/>
+  <property name="academus.classes.dir" value="C:/portal/unicon/Academus/portal-tomcat-a/webapps/portal/WEB-INF/classes"/>
+  <property name="web-inf.dir" value="WEB-INF"/>
+  
+  <target name="init">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${classes.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <mkdir dir="${lib.dir}"/>
+  </target>
+  <target name="compile" depends="init">
+    <javac destdir="${classes.dir}" deprecation="true" debug="true" optimize="false">
+      <src>
+        <pathelement location="${src.dir}"/>
+      </src>
+      <classpath path="${academus.classes.dir}"/>
+      <classpath>
+        <fileset dir="${lib.dir}">
+          <include name="*.jar">
+          </include>
+        </fileset>
+        <fileset dir="${tomcat.shared.lib.dir}">
+          <include name="*.jar">
+          </include>
+        </fileset>        
+      </classpath>
+    </javac>
+  </target>
+  
+  <target name="jar" depends="compile">
+  <jar destfile="${dist.dir}/databasestatsrecorder.jar"
+       basedir="${classes.dir}"
+       excludes="**/Test.class"
+  />
+  </target>
+  <target name="war" depends="compile">
+    <war destfile="${dist.dir}/${war.name}.war" webxml="WEB-INF/web.xml">
+<!--    	<zipfileset prefix="images" dir="images"/> -->
+        <classes dir="${classes.dir}"/>
+<!--        <lib dir="${lib.dir}"/> -->
+        <webinf dir="${web-inf.dir}"/>
+    </war>
+  </target>
+  <target name="clean">
+    <delete dir="${build.dir}">
+    </delete>
+    <delete dir="${dist,dir}">
+    </delete>
+  </target>
+</project>

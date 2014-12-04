@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project default="war" name="directory" basedir=".">
+  <property file="${user.home}/build.properties"/>
+  <property file="build.properties"/>
+  <property name="src.dir" value="src"/>
+  <property name="build.home" value="build"/>
+<property name="dist.dir" value="dist"/>
+<!--  <property name="dist.dir" value="C:/eclipse/workspace/uPortal242/uPortal_rel-2-4-2/lib/portlets"/> -->
+  <property name="tomcat.shared.lib.dir" value="${catalina.home}/shared/lib"/>	
+  <property name="classes.dir" value="${build.home}/classes"/>
+  <property name="lib.dir" value="${catalina.home}/common/lib"/>
+  <property name="web-inf.dir" value="web/WEB-INF"/>
+  
+  <target name="init">
+    <mkdir dir="${build.home}"/>
+    <mkdir dir="${classes.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <mkdir dir="${lib.dir}"/>
+  </target>
+
+  <target name="compile" depends="prepare">
+    <javac destdir="${build.home}/WEB-INF/classes" deprecation="true" debug="true" optimize="false">
+      <src>
+        <pathelement location="${src.dir}"/>
+      </src>
+      <classpath>
+        <fileset dir="${lib.dir}">
+          <include name="*.jar">
+          </include>
+        </fileset>
+        <fileset dir="${tomcat.shared.lib.dir}">
+          <include name="*.jar">
+          </include>
+        </fileset>        
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="prepare" depends="init">
+    <copy todir="${build.home}">
+      <fileset dir="web" />
+    </copy>
+  </target>
+
+  <target name="war" depends="compile">
+    <war destfile="${dist.dir}/${war.name}.war" webxml="web/WEB-INF/web.xml">
+<!--    	<zipfileset prefix="images" dir="images"/> -->
+        <classes dir="${classes.dir}"/>
+<!--        <lib dir="${lib.dir}"/> -->
+        <webinf dir="${web-inf.dir}"/>
+    </war>
+  </target>
+  <target name="clean">
+    <delete dir="${build.home}">
+    </delete>
+    <delete dir="${dist.dir}">
+    </delete>
+  </target>
+</project>

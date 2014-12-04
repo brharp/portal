@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "../../dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="webCtSsoServlet"
+        class="ca.uoguelph.ccs.portal.webct.WebCtSsoServlet">
+    <property name="webCtService"><ref bean="webCtService"/></property>
+  </bean>
+
+  <bean id="simpleUrlMapping" 
+        class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <property name="order" value="20"/>
+    <property name="mappings">
+      <props>
+        <prop key="/sso">webCtSsoServlet</prop>
+      </props>
+    </property>
+  </bean>
+
+  <!-- Exceptions Handler -->
+
+  <bean id="defaultExceptionHandler" parent="defaultExceptionHandlerTemplate"/>
+
+</beans>

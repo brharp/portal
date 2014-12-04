@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" singleton="true">
+        <property name="configLocation">
+        <value>classpath:ehcache.xml</value>
+        </property>
+    </bean>
+
+    <bean id="urlCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean" singleton="true">
+        <property name="cacheManager">
+            <ref local="cacheManager"/>
+        </property>
+        <property name="cacheName">
+            <value>URL_CACHE</value>
+        </property>
+    </bean>
+
+    <bean id="feedCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean" singleton="true">
+        <property name="cacheManager">
+            <ref local="cacheManager"/>
+        </property>
+        <property name="cacheName">
+            <value>FEED_CACHE</value>
+        </property>
+    </bean>
+
+    <bean id="feedInfoCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean" singleton="true">
+        <property name="cacheManager">
+            <ref local="cacheManager"/>
+        </property>
+        <property name="cacheName">
+            <value>FEEDINFO_CACHE</value>
+        </property>
+    </bean>
+
+    <bean id="syndFeedInfoCache" class="com.sun.portal.rssportlet.SyndFeedInfoCache" singleton="true">
+        <property name="cache">
+            <ref local="feedInfoCache"/>
+        </property>
+    </bean>
+    
+    <bean id="syndFeedFetcherWithCache" class="com.sun.portal.rssportlet.SyndFeedFetcherWithCache" singleton="true">
+        <property name="feedFetcherCache">
+            <ref local="syndFeedInfoCache"/>
+        </property>
+        <property name="urlCache">
+            <ref local="urlCache"/>
+        </property>
+        <property name="feedCache">
+            <ref local="feedCache"/>
+        </property>
+    </bean>
+    
+</beans>

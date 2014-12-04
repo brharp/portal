@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+                         "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app version="2.4">
+    <display-name>Weather Portlet</display-name>
+    <servlet>
+        <servlet-name>WeatherPortlet</servlet-name>
+        <display-name>WeatherPortlet Wrapper</display-name>
+        <description>Automated generated Portlet Wrapper</description>
+        <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+        <init-param>
+            <param-name>portlet-class</param-name>
+            <param-value>com.aurigalogic.weatherPortlet.WeatherPortlet</param-value>
+        </init-param>
+        <init-param>
+            <param-name>portlet-guid</param-name>
+            <param-value>Weather.WeatherPortlet</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WeatherPortlet</servlet-name>
+        <url-pattern>/WeatherPortlet/*</url-pattern>
+    </servlet-mapping>
+</web-app>

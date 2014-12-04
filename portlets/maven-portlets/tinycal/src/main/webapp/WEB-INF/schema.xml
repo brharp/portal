@@ -1,0 +1,40 @@
+<schema>
+
+  <table name="event">
+    <column name="evid"   type="int4" not-null="true"/>
+    <column name="title"  type="varchar" not-null="true"/>
+    <column name="dtstart"  type="timestamp" not-null="true"/>
+    <column name="dtend"    type="timestamp"/>
+    <column name="uid"    type="varchar"/>
+    <column name="detail" type="varchar"/>
+    <column name="link"   type="varchar" not-null="true"/>
+    <column name="source" type="int4" not-null="true"/>
+    <constraint name="event_pkey" type="primary-key">
+      <key name="evid"/>
+    </constraint>
+  </table>
+
+  <sequence name="event_evid_seq"/>
+
+  <table name="feed">
+    <column name="fid" type="int4" not-null="true"/>
+    <column name="title" type="varchar" not-null="true"/>
+    <column name="link" type="varchar" not-null="true"/>
+    <column name="lastread" type="timestamp"/> 
+    <constraint name="feed_pkey" type="primary-key">
+      <key name="fid"/>
+    </constraint>
+  </table>
+
+  <sequence name="feed_fid_seq"/>
+
+  <table name="subs">
+    <column name="uid" type="int4" not-null="true"/>
+    <column name="fid" type="int4" not-null="true"/>
+    <constraint name="subs_pkey" type="primary-key">
+      <key name="uid"/>
+      <key name="fid"/>
+    </constraint>
+  </table>
+
+</schema>

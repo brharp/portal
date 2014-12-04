@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="compile" name="Weather Portlet" basedir=".">
+  <property file="build.properties"/>
+  <property name="projName" value="WeatherPortlet"></property>
+  <property name="websrc" value="websrc"></property>
+  <property name="etc" value="etc"></property>
+  <property name="libdir" value="lib"></property>
+  <property name="tlddir" value="tld"></property>	
+  <property name="devlibdir" value="dev-lib"></property>
+  <property name="src" value="src"></property>
+  <property name="build" value="build"></property>
+  <property name="version" value="1.0-Beta"></property>
+  <property name="war" value="${build}/war"></property>
+  <property name="classesDir" value="${build}/classes"></property>
+  <property name="deploy" value="C:/eclipse3.0/workspace/uPortal242/jakarta-tomcat-5.0.28/webapps/Weather/"></property>
+  <property name="build.testReports" value="${build}/tests" />
+  <property name="deploy.home" value="${deploy}"/>
+
+	<target name="compile">
+		<mkdir dir="${classesDir}" />
+		<copy todir="${classesDir}">
+			<fileset dir="${src}" excludes="**/*.txt,**/*.java,**/*.swp,**/*.bak,**/*.hbm.xml"/>
+		</copy>
+		<concat destfile="${classesDir}/com/aurigalogic/weatherPortlet/Info.properties" append="false">version=${version}
+		</concat>
+
+		<javac srcdir="${src}" destdir="${classesDir}" 
+			deprecation="false" debug="on">
+			<classpath>
+				<fileset dir="${libdir}">
+					<include name="**/*.jar" />
+				</fileset>
+				<fileset dir="${devlibdir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		<jar destfile="${build}/${projName}.jar" update="overwrite">
+			<fileset dir="${classesDir}"/>
+		</jar>	
+	</target>
+	
+	<target name="clean">
+		<delete dir="${build}" />
+    </target>
+
+	<target name="deploy" depends="compile">
+        <copy todir="${deploy.home}/Weather">
+            <fileset dir="${websrc}"/>
+        </copy>
+        <copy todir="${deploy.home}/Weather/WEB-INF">
+            <fileset dir="${etc}" excludes="**/*.java,**/*.swp"/>
+        </copy>
+        <copy todir="${deploy.home}/Weather/WEB-INF/lib">
+            <fileset dir="${libdir}" excludes="**/*.txt,**/*.java,**/*.swp"/>
+        </copy>        	
+		<copy todir="${deploy.home}/Weather/WEB-INF/tld">
+            <fileset dir="${tlddir}" />
+	    </copy>			
+		<copy todir="${deploy.home}/Weather/WEB-INF/classes">		
+            <fileset dir="${build}/classes" />
+        </copy>
+    </target>
+
+	<target name="war" depends="compile">
+		<mkdir dir="${war}" />
+		<jar destfile="${build}/${projName}.war" update="overwrite">
+			<fileset dir="${war}"/>
+		</jar>	
+    </target>
+
+    <path id="test.classpath">
+        <fileset dir="${build}">
+            <include name="${projName}.jar" />
+        </fileset>
+        <fileset dir="${libdir}">
+            <include name="**/*.jar" />
+        </fileset>
+        <fileset dir="${devlibdir}">
+            <include name="**/*.jar" />
+        </fileset>
+        <pathelement path="etc/classes" />
+    </path>
+
+	<!-- to run quick single tests -->
+	<target name="test" depends="compile">
+		<echo message="Running ${test}Test ..."/>
+		<delete dir="${build.testReports}" />
+        <mkdir dir="${build.testReports}"/>
+        <junit fork="yes" printsummary="withOutAndErr" haltonfailure="no" showoutput="yes">
+            <batchtest fork="yes" todir="${build.testReports}" >
+                <fileset dir="${classesDir}">
+                    <include name="**/*Test.class" />
+                    <exclude name="**/BaseWebTest.class" />
+                    <exclude name="**/*Stress*Test.class" />
+                </fileset>
+            </batchtest>
+            <formatter type="xml" />
+            <classpath refid="test.classpath" />
+        </junit>
+
+        <junitreport todir="${build.testReports}">
+            <fileset dir="${build.testReports}">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report todir="${build.testReports}" />
+        </junitreport>
+    </target>
+
+	<target name="dist" depends="clean, war">
+		<zip zipfile="../${projName}-${version}.zip">
+			<zipfileset dir="." excludes="**/${build}/**,**/*.swp" prefix="${projName}-${version}"/>
+			<zipfileset dir="${build}" includes="${projName}.war" prefix="${projName}-${version}"/>
+		</zip>
+        <move todir="${build}" file="../${projName}-${version}.zip"/>
+			<!--
+            <fileset dir="../" includes="${projName}-${version}.zip"/>
+        </copy>-->
+
+	</target>
+
+	<target name="help">
+		<echo>---------------------------------------------------------------------------------</echo>
+		<echo>You may use the following targets to build ${projName} from the source code.</echo>
+		<echo>---------------------------------------------------------------------------------</echo>
+		<echo>compile		Compiles the code</echo>
+		<echo>war			Builds a web archive</echo>
+		<echo>test		Runs the unit tests</echo>
+		<echo>---------------------------------------------------------------------------------</echo>
+	</target>
+</project>

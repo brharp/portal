@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app
+    xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    version="1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
+    http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+    <portlet>
+        <description>
+            The Auriga Weather Portlet is developed to provide weather information,
+            based on the city name entered. It accesses this information from weather.com,
+            which is then displayed to the users.
+        </description>
+        <portlet-name>WeatherPortlet</portlet-name>
+        <display-name>Weather Portlet</display-name>
+        
+        <portlet-class>com.aurigalogic.weatherPortlet.WeatherPortlet</portlet-class>
+        <init-param>
+            <name>proxyHost</name>
+            <!-- The Proxy server's hostname or IP (leave blank if not using a proxy server) -->
+            <value></value>
+        </init-param>
+        <init-param>
+            <name>proxyPort</name>
+            <!-- The Proxy server's Port. Valid only if proxyHost is not empty. -->
+            <value>8090</value>
+        </init-param>
+        <expiration-cache>600</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+            <portlet-mode>EDIT</portlet-mode>
+            <portlet-mode>about</portlet-mode>
+        </supports>
+        <supported-locale>en</supported-locale>        
+        
+        <portlet-info>
+            <title>Weather Portlet</title>
+            <keywords>weather</keywords>
+        </portlet-info>
+        
+        <portlet-preferences>
+            <preference>
+                <!-- Partner Id given by weather.com -->
+                <name>par</name>
+                <value>1014290295</value>
+                <read-only>true</read-only>
+            </preference>
+            <preference>
+                <!-- License Key given by weather.com -->
+                <name>key</name>
+                <value>d27cc5020ab4c6d3</value>
+                <read-only>true</read-only>
+            </preference>
+            <preference>
+                <name>unit</name>
+                <value>m</value>
+                <read-only>false</read-only>
+            </preference>
+            <preference>
+                <!-- Default number of days for which the forecast should be shown. -->
+                <name>forecastDays</name>
+                <value>1</value>
+                <read-only>false</read-only>
+            </preference>
+            <preference>
+                <!-- Default part day for which the forecast should be shown. -->
+                <name>partDay</name>
+                <value>d</value>
+                <read-only>false</read-only>
+            </preference>
+            <preference>
+                <!-- Default for which the forecast should be shown. -->
+                <name>currentConditions</name>
+                <value>cc</value>
+                <read-only>false</read-only>
+            </preference>
+            
+            <preference>
+                <!-- Default city. -->
+                <name>cityName</name>
+                <value>Guelph, Canada</value>
+                <read-only>false</read-only>
+            </preference>
+
+            <preference>
+                <!-- Default campus. -->
+                <name>campus</name>
+                <value></value>
+                <read-only>false</read-only>
+            </preference>
+
+            <preferences-validator>com.aurigalogic.weatherPortlet.WeatherPortletValidator</preferences-validator>
+        </portlet-preferences>
+       
+               <user-attribute>
+                   <description>uid</description>
+                   <name>user.login.id</name>
+               </user-attribute>
+       <user-attribute>
+           <description>uid</description>
+           <name>user.login.password</name>
+       </user-attribute>
+       <user-attribute>
+           <description>uid</description>
+           <name>username</name>
+       </user-attribute>
+
+       <user-attribute>
+           <description>password</description>
+           <name>password</name>
+       </user-attribute>
+               <user-attribute>
+                       <description>organizationalstatus</description>
+                       <name>uPortalTemplateUserName</name>
+               </user-attribute>
+               <user-attribute>
+                       <description>campus</description>
+                       <name>campus</name>
+               </user-attribute>
+
+ 
+    </portlet>
+    
+    <custom-portlet-mode>
+        <portlet-mode>about</portlet-mode>
+    </custom-portlet-mode>
+    
+</portlet-app>
+        
+        

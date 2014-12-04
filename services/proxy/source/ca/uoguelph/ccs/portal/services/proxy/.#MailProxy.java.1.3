@@ -1,0 +1,168 @@
+
+package ca.uoguelph.ccs.portal.services.proxy;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.mail.*;
+import javax.mail.search.*;
+import org.jasig.portal.security.*;
+import org.jasig.portal.security.provider.*;
+import org.apache.commons.lang.StringEscapeUtils;
+
+/**
+ * Retrieve email from a remote mailbox.
+ */
+public class MailProxy extends HttpServlet
+{
+    public static final String IPERSON = IPerson.class.getName();
+    public static final String MAILHOST = "mailHost";
+    public static final String FLAG = "show";
+    public static final String RECENT = "new";
+    public static final String SEEN = "unread";
+    
+    SearchTerm recent = new FlagTerm(new Flags(Flags.Flag.RECENT), true);
+    SearchTerm unseen = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
+
+    protected void doPost(HttpServletRequest req,
+                          HttpServletResponse res)
+        throws IOException, ServletException
+    {
+        HttpSession httpsession;
+        httpsession = req.getSession();
+
+        if (httpsession == null) {
+            res.sendError(500);
+            return;
+        }
+
+        IPerson person;
+        person = (IPerson)httpsession.getAttribute(IPERSON);
+
+        if (person == null) {
+            res.sendError(500);
+            return;
+        }
+
+        ISecurityContext security;
+        security = person.getSecurityContext();
+
+        String username;
+        String password;
+        username = getUsername(security);
+        password = getPassword(security);
+
+        if (username == null || password == null) {
+            res.sendError(500);
+            return;
+        }
+
+        Enumeration en = person.getAttributeNames();
+        while(en.hasMoreElements()) {
+            String a = (String)en.nextElement();
+            log("IPerson["+a+"] = "+person.getAttribute(a));
+        }
+
+        String host;
+        host = (String)person.getAttribute(MAILHOST);
+
+        String flag;
+        flag = req.getParameter(FLAG);
+        
+        res.setContentType("text/xml");
+
+        // Prevent caching.
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "-1");
+
+        Writer out = res.getWriter();
+        out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        out.write("<rdf:RDF\n");
+        out.write(" xmlns=\"http://purl.org/rss/1.0/\"\n");
+        out.write(" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n");
+        out.write(" xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n");
+        out.write(">\n");
+
+        // Create empty properties
+        Properties props = new Properties();
+        
+        // Get session
+        Session session = Session.getDefaultInstance(props, null);
+        
+        // Get the store
+        Store store = null;
+        Folder folder = null;
+        try {
+            store = session.getStore("imap");
+            store.connect(host, username, password);
+            
+            // Get folder
+            folder = store.getFolder("INBOX");
+            folder.open(Folder.READ_ONLY);
+            
+            // Get directory
+            SearchTerm q;
+            if (RECENT.equals(flag)) {
+                q = recent;
+            } else {
+                q = unseen;
+            }
+
+            Message message[] = folder.search(q);
+            //Message message[] = folder.getMessages();
+            
+            for (int i=0, n=Math.min(message.length,10); i<n; i++) {
+                out.write("<item>\n");
+                out.write("<title>");
+                out.write(StringEscapeUtils.escapeHtml
+                          (message[i].getSubject()));
+                out.write("</title>\n");
+                out.write("<dc:creator>");
+                out.write(StringEscapeUtils.escapeHtml
+                          (message[i].getFrom()[0].toString()));
+                out.write("</dc:creator>\n");
+                out.write("<dc:date>");
+                out.write(StringEscapeUtils.escapeHtml
+                          (message[i].getReceivedDate().toString()));
+                out.write("</dc:date>\n");
+                out.write("</item>\n");
+            }
+        }
+        catch(Exception e) {
+            System.out.println("Failed to get mail for "+username+" at "
+                               +host+" due to " + e);
+        }
+        finally {
+            // Close connection 
+            try { if (folder != null) folder.close(false); } catch(Exception f) {}
+            try { if (store != null) store.close(); } catch(Exception f) {}
+        }
+        
+        out.write("</rdf:RDF>\n");
+    }
+
+    private String getUsername(ISecurityContext sc)
+    {
+        return sc.getPrincipal().getUID();
+    }
+
+    private String getPassword(ISecurityContext sc)
+    {
+        IOpaqueCredentials oc = sc.getOpaqueCredentials();
+        if (oc instanceof NotSoOpaqueCredentials) {
+            return ((NotSoOpaqueCredentials)oc).getCredentials();
+        } else {
+            Enumeration en = sc.getSubContexts();
+            while (en.hasMoreElements()) {
+                String pw = getPassword((ISecurityContext)en.nextElement());
+                if (pw != null) {
+                    return pw;
+                }
+            }
+        }
+        return null;
+    }
+}

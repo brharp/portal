@@ -1,0 +1,94 @@
+<project name="CalendarService" default="compile" basedir=".">
+
+  <property file="${user.home}/build.properties"/>
+  <property file="build.properties"/> 
+  
+  <property name="dist.home" value="${basedir}/dist"/>
+  <property name="build.home" value="${basedir}/build"/>
+  <property name="webapp.home" value="${build.home}"/>
+  <property name="deploy.home" value="${root.home}"/>
+
+  <path id="compile.classpath">
+    <!-- Include all JAR files that will be included in /WEB-INF/lib -->
+    <fileset dir="${basedir}/lib">
+      <include name="**/*.jar" />
+    </fileset>
+    <!-- Include all JAR files exposed by the portal webapp. -->
+    <fileset dir="${basedir}/../../unicon/Academus/portal-tomcat-a/common/lib">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${basedir}/../../unicon/Academus/portal-tomcat-a/shared/lib">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${basedir}/../../unicon/Academus/portal-tomcat-a/webapps/portal/WEB-INF/lib">
+      <include name="*.jar"/>
+    </fileset>
+    <!-- Include all elements that Tomcat exposes to applications -->
+    <pathelement location="${catalina.home}/common/classes" />
+    <fileset dir="${catalina.home}/common/endorsed">
+      <include name="*.jar" />
+    </fileset>
+    <fileset dir="${catalina.home}/common/lib">
+      <include name="*.jar" />
+    </fileset>
+    <pathelement location="${catalina.home}/shared/classes" />
+    <fileset dir="${catalina.home}/shared/lib">
+      <include name="*.jar" />
+    </fileset>
+    <pathelement location="${catalina.home}/webapps/portal/WEB-INF/classes" />
+  </path>
+  
+  <target name="init">
+    <mkdir dir="${build.home}" />
+    <mkdir dir="${dist.home}" />
+  </target>
+  
+  <target name="clean">
+    <delete dir="build" />
+    <delete dir="dist" />
+  </target>
+  
+  <target name="compile" depends="init,prepare">
+    <javac srcdir="source"
+           destdir="${build.home}/WEB-INF/classes"
+           debug="${compile.debug}"
+           deprecation="${compile.deprecation}"
+           optimize="${compile.optimize}">
+      <classpath refid="compile.classpath"/>
+    </javac>
+  </target>
+  
+  <target name="prepare" depends="init">
+    <copy todir="${build.home}">
+      <fileset dir="web" />
+    </copy>
+    <copy todir="${build.home}/WEB-INF/lib">
+      <fileset dir="lib" />
+    </copy>
+  </target>
+  
+  <target name="deploy" depends="compile">
+    <mkdir dir="${deploy.home}/portal"/>
+    <copy todir="${deploy.home}/portal">
+      <fileset dir="build"/>
+    </copy>
+  </target>
+
+  <target name="dist" depends="prepare">
+    <jar destfile="dist/${project.name}.war">
+      <fileset dir="build"/>
+    </jar>
+  </target>
+  
+  <target name="javadoc">
+    <javadoc sourcepath="source" 
+             destdir="javadoc" 
+             packagenames="ca.uoguelph.ccs.*" 
+             doctitle="${project.name} - ${project.version}"
+             windowtitle="${project.name} - ${project.version}"
+             access="public" 
+             author="true" 
+             version="true"/>
+  </target>
+  
+</project>

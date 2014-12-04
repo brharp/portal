@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "../../dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="myExamsController"
+        class="ca.uoguelph.ccs.portal.mycourses.MyExamsController">
+    <property name="courseService"><ref bean="courseService"/></property>
+  </bean>
+
+  <bean id="eventAddController"
+        class="ca.uoguelph.ccs.portal.calendar.EventAddController">
+    <property name="calendarService"><ref bean="calendarService"/></property>
+    <property name="formView" value="calendar/eventAdd"/>
+    <property name="successView" value="calendar/eventAdded"/>
+    <property name="commandClass" value="ca.uoguelph.ccs.portal.calendar.academus.AcademusEvent"/>
+  </bean>
+
+  <bean id="parameterMappingInterceptor" 
+        class="org.springframework.web.portlet.handler.ParameterMappingInterceptor"/>
+
+  <bean id="portletModeParameterHandlerMapping"
+        class="org.springframework.web.portlet.handler.PortletModeParameterHandlerMapping">
+    <property name="order" value="10"/>
+    <property name="interceptors">
+      <list>
+        <ref bean="parameterMappingInterceptor"/>
+      </list>
+    </property>
+    <property name="portletModeParameterMap">
+      <map>
+        <entry key="view">
+          <map>
+            <entry key="addEvent"><ref bean="eventAddController"/></entry>
+          </map>
+        </entry>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="portletModeHandlerMapping" 
+        class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
+    <property name="order" value="20"/>
+    <property name="portletModeMap">
+      <map>
+        <entry key="view"><ref bean="myExamsController"/></entry>
+      </map>
+    </property>
+  </bean>
+
+  <!-- Exceptions Handler -->
+
+  <bean id="defaultExceptionHandler" parent="defaultExceptionHandlerTemplate"/>
+
+</beans>

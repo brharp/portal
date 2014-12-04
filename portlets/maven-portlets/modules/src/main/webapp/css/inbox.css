@@ -1,0 +1,66 @@
+div.myinbox-left {
+ align: left;
+ overflow: hidden;
+ height: 1.7em;
+ line-height:2em;
+}
+
+div.myinbox-left img {
+ position:relative;
+ top: 0.25em;
+
+}
+
+div.myinbox-right {
+ position:relative;
+ top:7px;
+ align: right;
+ float: right;
+ height: 1.2em;
+ font-size:0.75em;
+ overflow: hidden;
+}
+
+div.read {
+ color: #666666;
+ font-size:0.9em;
+}
+
+div.unread {
+ color: #666666;
+ font-size:0.9em;
+}
+
+div.unread span {
+ color:#000000;
+ font-weight:bold;
+ font-size:1.1em;
+}
+
+div.read span {
+ color:#000000;
+ font-size:1.1em;
+}
+
+.portlet-introduction {
+  font-size: normal;
+  padding-bottom:0.5em;
+}
+
+div.myinbox-checkmail {
+ text-align: right;
+ padding-top: 1em;
+ font-size: 0.9em;
+}
+
+div.myinbox-empty {
+  text-align: center;
+  font-size:0.9em;
+  font-style:oblique;
+}
+
+div.deleted {
+  text-decoration:line-through;
+  color:#666666;
+}
+

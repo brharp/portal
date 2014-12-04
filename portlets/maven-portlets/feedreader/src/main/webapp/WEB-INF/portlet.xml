@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app 
+    xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd /opt/SUNWportal/dtd/portlet.xsd"
+    version="1.0">
+
+<portlet>
+    <portlet-name>RssPortlet</portlet-name>
+    <portlet-class>com.sun.portal.rssportlet.RssPortlet</portlet-class>
+    <expiration-cache>30</expiration-cache>
+    <supports>
+	<mime-type>text/html</mime-type>
+	<portlet-mode>edit</portlet-mode>
+	<portlet-mode>help</portlet-mode>
+    </supports>
+    <supported-locale>en_US</supported-locale>
+    <portlet-info>
+	<title>Rss Portlet</title>
+	<short-title>Sun: Rss</short-title>
+	<keywords>RSS, syndication, feed, Atom</keywords>
+    </portlet-info> 
+    <portlet-preferences>
+	<preference>
+            <name>feeds</name>
+	    <value>http://rss.slashdot.org/Slashdot/slashdot</value>
+            <value>http://blogs.sun.com/roller/rss/jonathan</value>
+            <value>http://www.wired.com/news_drop/netcenter/netcenter.rdf</value>
+            <value>http://www.theserverside.com/rss/theserverside-rss2.xml</value>
+            <value>http://www.sciencedaily.com/newsfeed.xml</value>
+            <value>http://rollerweblogger.org/rss/project</value>
+            <value>http://blogs.sun.com/roller/rss/theaquarium</value>
+            
+	</preference>
+        <preference>
+            <name>maxEntries</name>
+            <value>5</value>
+        </preference>
+        <preference>
+            <name>newWindow</name>
+            <value>true</value>
+        </preference>      
+        <preference>
+            <name>disableMaxAge</name>
+            <value>false</value>
+        </preference>
+        <preference>
+            <name>maxAge</name>
+            <value>72</value>
+        </preference>   
+        <preference>
+            <name>cacheTimeout</name>
+            <value>3600</value>        
+        </preference>
+        <preference>
+            <name>maxDescriptionLength</name>
+            <value>512</value>
+        </preference>
+    </portlet-preferences>
+  </portlet>  
+</portlet-app>

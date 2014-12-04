@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2006 University of Guelph
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ca.uoguelph.ccs</groupId>
+  <artifactId>atomcal</artifactId>
+  <packaging>war</packaging>
+  <name>atomcal</name>
+  <version>0.1</version>
+  
+  <properties>
+    <servlet-api.version>2.3</servlet-api.version>
+    <csdk.version>10.1.2</csdk.version>
+    <ical4j.version>0.9.20</ical4j.version>
+  </properties>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>${servlet-api.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>oracle</groupId> 
+      <artifactId>csdk</artifactId> 
+      <version>${csdk.version}</version> 
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>net.fortuna</groupId> 
+      <artifactId>ical4j</artifactId> 
+      <version>${ical4j.version}</version> 
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>ca.uoguelph.ccs</groupId> 
+      <artifactId>xalan</artifactId> 
+      <version>head</version> 
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>ca.uoguelph.ccs</groupId> 
+      <artifactId>serializer</artifactId> 
+      <version>head</version> 
+      <scope>compile</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <finalName>${pom.name}</finalName>
+    <plugins>
+      <plugin>
+        <!-- Override the 'integration-test' lifecycle phase
+             with a custom one that runs a simple Ant script -->
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>integration-test</phase>
+            <configuration>
+              <tasks>
+                <!-- Set tomcat.home to CATALINA_HOME environmental
+                     variable Use this to skip
+                     -Dpluto.home=/path/to/pluto on command line -->
+                <property environment="env"/>
+                <property name="pluto.home" value="${env.CATALINA_HOME}"/>
+                <echo message="pluto.home=${pluto.home}"/>
+                <!-- Remove former deployment because sometimes
+                     tomcat does not fully redeploy a war -->
+                <delete
+                    dir="${pluto.home}/webapps/${pom.name}"
+                    failonerror="false"
+                    />
+                <!-- Deploy war file -->
+                <copy
+                    file="${project.build.directory}/${pom.name}.war"	
+                    todir="${pluto.home}/UGDomain/"
+                    overwrite="true"
+                    />
+                <!-- Deploy context deployment descriptor for Tomcat -->
+                <copy
+                    file="${basedir}/src/main/resources/${pom.name}.xml"
+                    todir="${pluto.home}/conf/Catalina/localhost"
+                    overwrite="false"
+                    />
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
